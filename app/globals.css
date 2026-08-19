@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-cta {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-cam px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-cam/30 transition hover:bg-cam-dark hover:shadow-xl active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-xl border-2 border-navy/20 px-5 py-3 text-sm font-semibold text-navy transition hover:border-navy hover:bg-navy/5;
+  }
+  .card {
+    @apply rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200;
+  }
+  .chip {
+    @apply cursor-pointer rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium transition hover:border-navy/50;
+  }
+  .chip-active {
+    @apply border-navy bg-navy/5 text-navy;
+  }
+}
+
+@keyframes scan {
+  0% { transform: translateY(0); opacity: 0.9; }
+  50% { transform: translateY(140px); opacity: 0.4; }
+  100% { transform: translateY(0); opacity: 0.9; }
+}
+.scan-line {
+  animation: scan 1.6s ease-in-out infinite;
+}
+
+.progress-bar {
+  transition: width 0.4s ease;
+}
+
+.agent-output h1, .agent-output h2, .agent-output h3 { font-weight: 700; margin: 0.9em 0 0.35em; }
+.agent-output p { margin: 0.45em 0; }
+.agent-output ul { list-style: disc; padding-left: 1.2em; margin: 0.4em 0; }
+.agent-output ol { list-style: decimal; padding-left: 1.2em; margin: 0.4em 0; }
+.agent-output strong { color: #1E40AF; }
