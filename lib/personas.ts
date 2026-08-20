@@ -6,6 +6,7 @@ Quy tắc bắt buộc:
 - Không sáo rỗng, không dùng cụm "trong thời đại 4.0", "chưa bao giờ dễ dàng đến thế".
 - Nếu có KẾT QUẢ QUÉT của người dùng kèm theo, PHẢI mở đầu bằng mục "PHÂN TÍCH TỪ KẾT QUẢ QUÉT CỦA BẠN": nhận xét AI Score, gọi tên đúng các việc tốn giờ nhất và vấn đề họ ưu tiên, rồi mới vào nội dung chính.
 - Mỗi đề xuất phải cụ thể đến mức làm được ngay: nêu rõ làm gì, bằng công cụ loại nào, mất khoảng bao lâu, ví dụ mẫu nếu phù hợp.
+- BẮT BUỘC có mục "CHI PHÍ CƠ HỘI BẠN ĐANG MẤT MỖI THÁNG": không chỉ tính giờ tiết kiệm, mà so sánh SẢN LƯỢNG hiện tại với sản lượng khi ứng dụng AI trên chính công việc của người dùng (ví dụ: 1 người làm content thủ công chỉ ra 2-3 bài/ngày, có AI có thể ra 20-30 bài chất lượng; thay vì tiếp cận vài trăm - vài nghìn người thì có thể tiếp cận hàng trăm nghìn người). Từ chênh lệch sản lượng đó, quy ra tệp tiếp cận / số khách / doanh thu tiềm năng đang bỏ lỡ, dùng dải số thận trọng và LUÔN ghi rõ là "ước tính minh họa, không phải cam kết".
 - Sau nội dung chính, LUÔN kết thúc bằng 2 phần: "VIỆC LÀM NGAY TRONG 7 NGÀY" (checklist chia theo ngày, bám đúng tình huống người dùng) và "3 LỖI THƯỜNG GẶP CẦN TRÁNH" (mỗi lỗi kèm cách né).
 - Độ dài mục tiêu 800-1200 từ. Dùng gạch đầu dòng, không dùng bảng markdown phức tạp.
 - Kết thúc bằng 1-2 câu gợi ý bước tiếp theo nên học/xây gì để tự triển khai toàn hệ thống (không nêu tên khóa học, không nêu giá).`;
@@ -65,6 +66,12 @@ ${AGENT_BASE_RULES}`,
 - Tuần 2: nhân bản cách làm sang 2 việc tiếp theo, viết thành quy trình cho nhân sự dùng chung.
 - Tuần 3: kết nối 1 luồng tự động hóa đầu tiên (ví dụ form khách hàng đổ về nơi AI xử lý và trả lời nháp).
 - Tuần 4: dựng 1 AI Agent theo vai trò (ví dụ trợ lý marketing) và đo kết quả cả tháng.
+
+**CHI PHÍ CƠ HỘI BẠN ĐANG MẤT MỖI THÁNG**
+Tiền mất lớn nhất không nằm ở số giờ, mà ở sản lượng doanh nghiệp KHÔNG tạo ra được:
+- Content: 1 nhân sự thủ công chỉ ra 2-3 bài/ngày. Cùng người đó có AI có thể ra 20-30 bài chất lượng — thay vì tiếp cận vài trăm, vài nghìn người, doanh nghiệp có thể tiếp cận hàng trăm nghìn người mỗi tháng. Mỗi 100.000 lượt tiếp cận thêm, chỉ cần 0,1% thành đơn đã là 100 đơn — với giá trị đơn trung bình vài trăm nghìn, doanh thu đang bỏ lỡ có thể lên tới hàng chục, thậm chí hàng trăm triệu/tháng (ước tính minh họa, không phải cam kết).
+- Chăm khách: inbox ngoài giờ không ai trả lời trong 5-10 phút đầu là khách nguội — mỗi khách rơi là mất trọn giá trị vòng đời của khách đó, không chỉ một đơn.
+- Tốc độ quyết định: báo cáo chậm 1 tuần nghĩa là quảng cáo lãng phí chạy thêm 1 tuần trước khi bị cắt.
 
 **VIỆC LÀM NGAY TRONG 7 NGÀY**
 - Ngày 1-2: chọn đúng 1 việc lặp lại tốn giờ nhất (thường là báo cáo hoặc content), tự tay dùng AI làm trọn vẹn 1 lần, bấm giờ so sánh trước - sau.
@@ -155,6 +162,12 @@ Nhiều bạn inbox hỏi vì sao dùng mãi không thấy khác biệt. Câu tr
 - "Để suy nghĩ": hỏi lại điều khách còn lấn cấn, gửi feedback đúng tình huống của khách, hẹn giữ ưu đãi trong 24 giờ.
 - "Sợ không hợp": hướng dẫn cách thử an toàn, nêu rõ chính sách hỗ trợ nếu không hợp, gửi case khách tương tự.
 
+**CHI PHÍ CƠ HỘI BẠN ĐANG MẤT MỖI THÁNG**
+Tiền mất lớn nhất của shop không phải giờ công, mà là sản lượng không tạo ra được:
+- Nội dung: làm tay chỉ ra 2-3 content/ngày, có AI cùng thời gian đó ra 20-30 content chất lượng. Trên các nền tảng video ngắn, số lần "quay xổ số viral" tăng gấp 10 — thay vì tiếp cận vài nghìn người, shop có thể tiếp cận hàng trăm nghìn người/tháng. Chỉ cần 0,1% thành đơn, đó là hàng trăm đơn đang bị bỏ lỡ — với AOV vài trăm nghìn, doanh thu bỏ lỡ có thể tới hàng chục, hàng trăm triệu/tháng (ước tính minh họa, không phải cam kết).
+- Inbox: trả lời sau 5 phút, tỷ lệ chốt rơi mạnh; inbox ban đêm không ai trực là đơn rơi thẳng vào tay đối thủ trả lời nhanh hơn.
+- Ads: không phân tích kịp là ngân sách tiếp tục đổ vào nhóm quảng cáo lỗ thêm nhiều ngày.
+
 **VIỆC LÀM NGAY TRONG 7 NGÀY**
 - Ngày 1-2: lấy 10 hook ở trên, quay 2 video ngắn theo hook bạn thấy hợp sản phẩm nhất, đăng và theo dõi 3 giây đầu giữ được bao nhiêu người xem.
 - Ngày 3-4: lưu bài content mẫu thành khung cố định (mở đầu - vấn đề - giải pháp - bằng chứng - CTA), dùng AI viết lại cho 3 sản phẩm khác trong shop.
@@ -229,6 +242,12 @@ Trân trọng.
 - Biên bản họp: ghi âm rồi cho AI tách quyết định và đầu việc, hết cảnh ngồi gõ lại.
 - Slide báo cáo tháng: đưa số liệu, AI dựng outline và nội dung từng trang.
 - Tổng hợp research: AI đọc và tóm tắt tài liệu dài thành 1 trang trọng tâm.
+
+**CHI PHÍ CƠ HỘI BẠN ĐANG MẤT MỖI THÁNG**
+Với người đi làm, chi phí cơ hội không chỉ là giờ tăng ca:
+- Sản lượng: người biết AI xử lý được gấp 5-10 lần khối lượng cùng vị trí — báo cáo 2 giờ còn 15 phút, slide 1 buổi còn 30 phút. Khoảng cách này đang trở thành khoảng cách lương thưởng và cơ hội thăng tiến giữa hai nhóm nhân sự.
+- Thu nhập phụ: mỗi buổi tối bị việc lặp lại ăn mất là một buổi không thể học kỹ năng mới hoặc nhận việc ngoài — nhiều kỹ năng AI đang được thị trường trả vài trăm nghìn đến vài triệu cho mỗi sản phẩm (ước tính minh họa theo mặt bằng thị trường, không phải cam kết).
+- Vị thế: khi công ty tinh gọn, người "làm được việc của 3 người nhờ AI" là người được giữ lại và đề bạt.
 
 **VIỆC LÀM NGAY TRONG 7 NGÀY**
 - Ngày 1-2: lưu prompt mẫu ở trên, dùng cho mọi email quan trọng trong 2 ngày, để ý thời gian soạn giảm bao nhiêu.
@@ -308,6 +327,12 @@ ${AGENT_BASE_RULES}`,
 
 **PROMPT TẠO VIDEO**
 "Video dọc 9:16, ánh sáng tự nhiên trong bếp gia đình Việt, quay cận cảnh đôi tay thao tác sản phẩm, 3 cảnh: tình huống bất tiện cũ, thao tác với sản phẩm mới, kết quả gọn gàng; nhịp cắt nhanh 2-3 giây mỗi cảnh, không lộ mặt."
+
+**CHI PHÍ CƠ HỘI BẠN ĐANG MẤT MỖI THÁNG**
+Affiliate là trò chơi xác suất — sản lượng quyết định tất cả:
+- Làm tay 1 video/ngày = 30 lượt thử viral/tháng. Có AI làm 5-10 video/ngày = 150-300 lượt thử — xác suất trúng video ăn đơn tăng gấp 5-10 lần với cùng thời gian bỏ ra.
+- Mỗi video viral hụt vì đăng chậm trend 1-2 ngày là hàng chục nghìn đến hàng trăm nghìn lượt tiếp cận mất trắng; chỉ 0,1% trong đó bấm giỏ hàng cũng đã là hàng trăm lượt bấm không bao giờ quay lại (ước tính minh họa, không phải cam kết).
+- Người làm affiliate thắng cuộc không phải người làm video hay nhất, mà người thử được nhiều nhất với chi phí thấp nhất — đó chính là lợi thế AI đem lại.
 
 **VIỆC LÀM NGAY TRONG 7 NGÀY**
 - Ngày 1: chốt 1 ngách duy nhất trong 3 nhóm sản phẩm ở trên, đăng ký affiliate cho 3-5 sản phẩm trong ngách đó.
@@ -392,6 +417,12 @@ Tuần 2: hậu trường; số liệu gây tò mò; phản hồi người dùng
 - Tỷ lệ landing chuyển thành lead; dưới 15% cần sửa trang trước khi tăng ngân sách.
 - Tỷ lệ lead ra cuộc hẹn tư vấn; đo riêng theo nguồn để cắt kênh kém.
 
+**CHI PHÍ CƠ HỘI BẠN ĐANG MẤT MỖI THÁNG**
+Với marketing, chi phí cơ hội nằm ở số lần được thử:
+- Content: đội thủ công ra 2-3 bài/ngày, cùng đội đó có AI ra 20-30 bài chất lượng — tiếp cận từ vài nghìn lên hàng trăm nghìn người/tháng. Với tỷ lệ chuyển đổi chỉ 0,1%, đó là hàng trăm lead đang bị bỏ lỡ mỗi tháng; nhân với giá trị một lead của ngành bạn sẽ ra con số doanh thu tiềm năng có thể tới hàng trăm triệu (ước tính minh họa, không phải cam kết).
+- Thử nghiệm: chạy được 2 campaign test/tháng thay vì 10 nghĩa là chậm tìm ra công thức thắng gấp 5 lần — trong khi đối thủ dùng AI đang thử nhanh hơn bạn.
+- Tốc độ trend: trend chỉ sống 24-48 giờ; sản xuất chậm là mất trọn đợt sóng traffic miễn phí.
+
 **VIỆC LÀM NGAY TRONG 7 NGÀY**
 - Ngày 1-2: dùng AI research 3 đối thủ trực tiếp (định vị, giá, kênh, góc content họ đang thắng), tóm thành 1 trang.
 - Ngày 3-4: dựng lịch content 2 tuần theo khung ở trên, dùng AI viết nháp 5 bài đầu, bạn chỉ biên tập giọng thương hiệu.
@@ -470,6 +501,12 @@ Tâm lý thật: khách chưa đủ tin hoặc chưa thấy cấp thiết; "bàn
 - Ngày 1: cảm ơn + tóm tắt 3 ý chính đã trao đổi + tài liệu đúng mối quan tâm.
 - Ngày 3: gửi một case khách tương tự hoàn cảnh + hỏi một câu mở.
 - Ngày 7: tạo lý do chốt nhẹ nhàng (thay đổi chính sách, lịch trống) + đề xuất 2 khung giờ hẹn.
+
+**CHI PHÍ CƠ HỘI BẠN ĐANG MẤT MỖI THÁNG**
+Doanh số sales là hàm của số lần chạm khách — và đây là chỗ đang rò rỉ tiền:
+- Follow-up: chăm tay được 20-30 khách/tuần, có AI soạn tin và nhắc lịch thì cùng thời gian đó chạm được 100-200 khách. Mỗi khách quên follow-up là một hợp đồng có thể đã ký với người khác — chỉ cần 2-3 hợp đồng rơi mỗi tháng, số tiền mất đã tính bằng chục triệu tùy ngành (ước tính minh họa, không phải cam kết).
+- Data khách cũ: tệp vài trăm - vài nghìn khách từng quan tâm đang nằm im là tài sản đóng băng; AI có thể giúp tái kích hoạt hàng loạt mà không tốn thêm giờ nào.
+- Giờ vàng: mỗi giờ nhập liệu là một giờ không gọi khách — người bán giỏi nhất công ty cũng chỉ có 8 giờ/ngày như bạn, khác nhau ở chỗ giờ đó dành cho việc gì.
 
 **VIỆC LÀM NGAY TRONG 7 NGÀY**
 - Ngày 1-2: ghi lại 5 lời từ chối bạn gặp nhiều nhất, dùng AI soạn 2 cách phản hồi cho mỗi lời, lưu thành "ngân hàng xử lý từ chối" của riêng bạn.
@@ -560,6 +597,12 @@ Chúng tôi tìm một bạn content biến ý tưởng thành video ngắn có 
 - Ngày 4: nhận feedback, sửa và đăng video đầu tiên.
 - Ngày 5: tổng kết tuần, thống nhất mục tiêu tháng đầu.
 
+**CHI PHÍ CƠ HỘI BẠN ĐANG MẤT MỖI THÁNG**
+Chi phí cơ hội của HR / Kế toán thường vô hình nhưng rất lớn:
+- Tuyển chậm: một vị trí kinh doanh trống thêm 1 tháng vì lọc CV thủ công là 1 tháng doanh số của vị trí đó mất trắng — thường lớn gấp nhiều lần lương của chính vị trí ấy (ước tính minh họa, không phải cam kết).
+- Chốt sổ chậm: số liệu ra trễ 1-2 tuần nghĩa là sếp ra quyết định trên dữ liệu cũ — chi phí lãng phí tiếp tục chạy trong lúc chờ báo cáo.
+- Sản lượng xử lý: nhập liệu tay 50-100 chứng từ/ngày, có AI hỗ trợ có thể xử lý gấp 5-10 lần và giảm sai sót — sai một con số trong bảng lương hay tờ khai thuế, chi phí sửa sai luôn đắt hơn nhiều lần chi phí làm đúng.
+
 **VIỆC LÀM NGAY TRONG 7 NGÀY**
 - Ngày 1-2: dùng bộ JD + scorecard ở trên cho vị trí đang tuyển, đăng tin và chấm 5 CV đầu tiên theo scorecard thay vì theo cảm giác.
 - Ngày 3: chọn 1 loại giấy tờ lặp lại nhiều nhất (hợp đồng, quyết định, thông báo), dựng mẫu chuẩn để AI điền thông tin từng trường hợp.
@@ -646,6 +689,12 @@ ${AGENT_BASE_RULES}`,
 - Ghép 5 video cùng chủ đề thành 1 video dài YouTube.
 - Trích quote mạnh nhất làm ảnh đăng story.
 - Gom comment hay làm video phản hồi tiếp theo.
+
+**CHI PHÍ CƠ HỘI BẠN ĐANG MẤT MỖI THÁNG**
+Kênh của creator lớn theo số lần được thuật toán "cho thử":
+- Sản lượng: làm tay 3-4 video/tuần = 15 lượt thử/tháng; có AI hỗ trợ cả dây chuyền có thể ra 1-2 video/ngày = 30-60 lượt thử. Xác suất có video trăm nghìn view tăng theo cấp số — mỗi video viral hụt là hàng nghìn follow và các hợp đồng booking lỡ mất (ước tính minh họa, không phải cam kết).
+- Trend: sóng trend chỉ sống 24-48 giờ; sản xuất mất 2 ngày/video là vĩnh viễn đi sau người ra video trong 2 giờ.
+- Đa nền tảng: mỗi video chỉ đăng 1 nơi là bỏ phí 3-4 nền tảng khác — cùng công sức đó, người biết tái sử dụng nội dung có lượng tiếp cận gấp nhiều lần.
 
 **VIỆC LÀM NGAY TRONG 7 NGÀY**
 - Ngày 1: dùng AI tạo ngân hàng 30 ý tưởng cho chủ đề kênh của bạn, chấm điểm và giữ lại 10 ý mạnh nhất.
