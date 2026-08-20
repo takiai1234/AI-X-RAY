@@ -5,12 +5,25 @@ import { PERSONAS } from "@/lib/personas";
 import type { PersonaId } from "@/lib/types";
 import { track } from "@/lib/tracking";
 
-// WOW moment (mục 8): khách dùng thử 1 AI Agent, output thật trong 20-60 giây
+export interface AgentContext {
+  score: number;
+  level: number;
+  levelName: string;
+  topTaskLabels: string[];
+  painPoint: string;
+  scale: string;
+  hoursPerWeek: number;
+}
+
+// WOW moment (mục 8): khách dùng thử 1 AI Agent, output thật trong 20-60 giây.
+// context = kết quả quét để Agent tư vấn bám đúng người dùng.
 export default function AgentDemo({
   persona,
+  context,
   onDone,
 }: {
   persona: PersonaId;
+  context: AgentContext | null;
   onDone: () => void;
 }) {
   const p = PERSONAS[persona];
@@ -29,7 +42,7 @@ export default function AgentDemo({
       const res = await fetch("/api/agent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ personaId: persona, input }),
+        body: JSON.stringify({ personaId: persona, input, context }),
       });
       if (!res.body) throw new Error("no body");
       const reader = res.body.getReader();

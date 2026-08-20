@@ -4,9 +4,11 @@ const AGENT_BASE_RULES = `Bạn trả lời bằng tiếng Việt, văn phong c�
 Quy tắc bắt buộc:
 - Không hứa hẹn thu nhập hoặc kết quả cụ thể. Mọi con số đưa ra là ước tính minh họa và phải ghi rõ như vậy.
 - Không sáo rỗng, không dùng cụm "trong thời đại 4.0", "chưa bao giờ dễ dàng đến thế".
-- Ưu tiên hành động cụ thể người đọc làm được ngay trong tuần này.
-- Độ dài khoảng 400-600 từ, dùng gạch đầu dòng, không dùng bảng markdown phức tạp.
-- Kết thúc bằng 1 câu gợi ý bước tiếp theo nên học/xây gì để tự triển khai toàn hệ thống (không nêu tên khóa học, không nêu giá).`;
+- Nếu có KẾT QUẢ QUÉT của người dùng kèm theo, PHẢI mở đầu bằng mục "PHÂN TÍCH TỪ KẾT QUẢ QUÉT CỦA BẠN": nhận xét AI Score, gọi tên đúng các việc tốn giờ nhất và vấn đề họ ưu tiên, rồi mới vào nội dung chính.
+- Mỗi đề xuất phải cụ thể đến mức làm được ngay: nêu rõ làm gì, bằng công cụ loại nào, mất khoảng bao lâu, ví dụ mẫu nếu phù hợp.
+- Sau nội dung chính, LUÔN kết thúc bằng 2 phần: "VIỆC LÀM NGAY TRONG 7 NGÀY" (checklist chia theo ngày, bám đúng tình huống người dùng) và "3 LỖI THƯỜNG GẶP CẦN TRÁNH" (mỗi lỗi kèm cách né).
+- Độ dài mục tiêu 800-1200 từ. Dùng gạch đầu dòng, không dùng bảng markdown phức tạp.
+- Kết thúc bằng 1-2 câu gợi ý bước tiếp theo nên học/xây gì để tự triển khai toàn hệ thống (không nêu tên khóa học, không nêu giá).`;
 
 export const PERSONAS: Record<string, PersonaDef> = {
   ceo: {
@@ -63,6 +65,17 @@ ${AGENT_BASE_RULES}`,
 - Tuần 2: nhân bản cách làm sang 2 việc tiếp theo, viết thành quy trình cho nhân sự dùng chung.
 - Tuần 3: kết nối 1 luồng tự động hóa đầu tiên (ví dụ form khách hàng đổ về nơi AI xử lý và trả lời nháp).
 - Tuần 4: dựng 1 AI Agent theo vai trò (ví dụ trợ lý marketing) và đo kết quả cả tháng.
+
+**VIỆC LÀM NGAY TRONG 7 NGÀY**
+- Ngày 1-2: chọn đúng 1 việc lặp lại tốn giờ nhất (thường là báo cáo hoặc content), tự tay dùng AI làm trọn vẹn 1 lần, bấm giờ so sánh trước - sau.
+- Ngày 3-4: viết cách làm đó thành 1 prompt chuẩn có chỗ điền thông tin, đưa cho 1 nhân sự dùng thử và thu phản hồi.
+- Ngày 5: họp 30 phút với trưởng các bộ phận, mỗi người liệt kê 3 việc lặp lại nhiều nhất của bộ phận mình.
+- Ngày 6-7: chấm danh sách đó theo 2 tiêu chí (tốn giờ, dễ AI hóa), chốt 3 việc sẽ AI hóa trong tháng đầu, giao người phụ trách từng việc.
+
+**3 LỖI CHỦ DOANH NGHIỆP THƯỜNG GẶP KHI AI HÓA**
+- Mua công cụ trước khi chuẩn hóa quy trình: tool về không ai dùng vì việc chưa được mô tả rõ. Cách né: viết quy trình 1 trang trước, chọn tool sau.
+- Giao hết cho một bạn "trẻ, rành công nghệ": bạn ấy không có quyền sửa quy trình nên mọi thứ dừng ở thử nghiệm. Cách né: chủ doanh nghiệp phải tự tay làm thắng lợi đầu tiên.
+- Muốn AI hóa tất cả cùng lúc: đội ngũ quá tải rồi quay về cách cũ. Cách né: thắng 1 việc nhỏ trong 2 tuần để cả đội tin, rồi mới nhân rộng.
 
 Đây mới là một Agent đơn lẻ. Khi anh/chị tự xây được hệ thống Agent và Automation cho từng phòng ban, mức hiệu quả sẽ lớn hơn nhiều — bước tiếp theo nên học cách tự thiết kế quy trình AI hóa cho chính doanh nghiệp mình.`,
     },
@@ -142,6 +155,17 @@ Nhiều bạn inbox hỏi vì sao dùng mãi không thấy khác biệt. Câu tr
 - "Để suy nghĩ": hỏi lại điều khách còn lấn cấn, gửi feedback đúng tình huống của khách, hẹn giữ ưu đãi trong 24 giờ.
 - "Sợ không hợp": hướng dẫn cách thử an toàn, nêu rõ chính sách hỗ trợ nếu không hợp, gửi case khách tương tự.
 
+**VIỆC LÀM NGAY TRONG 7 NGÀY**
+- Ngày 1-2: lấy 10 hook ở trên, quay 2 video ngắn theo hook bạn thấy hợp sản phẩm nhất, đăng và theo dõi 3 giây đầu giữ được bao nhiêu người xem.
+- Ngày 3-4: lưu bài content mẫu thành khung cố định (mở đầu - vấn đề - giải pháp - bằng chứng - CTA), dùng AI viết lại cho 3 sản phẩm khác trong shop.
+- Ngày 5: gom 10 câu khách hay hỏi trong inbox, dùng AI soạn sẵn câu trả lời chuẩn, lưu thành file trả lời nhanh.
+- Ngày 6-7: áp kịch bản xử lý từ chối vào các đơn đang treo, ghi lại câu nào chốt được để nhân bản.
+
+**3 LỖI NHÀ BÁN HÀNG THƯỜNG GẶP**
+- Dùng AI viết content nhưng bê nguyên không sửa: nghe giống quảng cáo mẫu, khách lướt qua. Cách né: luôn thêm chi tiết thật của shop (feedback, số đơn, tình huống khách).
+- Chỉ tập trung content, bỏ quên khâu chốt: video nhiều view mà đơn không tăng. Cách né: đầu tư kịch bản trả lời inbox ngang với đầu tư video.
+- Mỗi ngày thử một kiểu theo trend: không có dữ liệu để biết cái gì hiệu quả. Cách né: giữ 1 khung content chạy đủ 2 tuần rồi mới đổi.
+
 Một Agent đã tạo được bộ content và kịch bản này trong một phút. Bước tiếp theo đáng học là tự xây hệ thống Agent chạy content, chăm khách và phân tích ads cho chính shop của bạn.`,
     },
     courses: [
@@ -206,6 +230,17 @@ Trân trọng.
 - Biên bản họp: ghi âm rồi cho AI tách quyết định và đầu việc, hết cảnh ngồi gõ lại.
 - Slide báo cáo tháng: đưa số liệu, AI dựng outline và nội dung từng trang.
 - Tổng hợp research: AI đọc và tóm tắt tài liệu dài thành 1 trang trọng tâm.
+
+**VIỆC LÀM NGAY TRONG 7 NGÀY**
+- Ngày 1-2: lưu prompt mẫu ở trên, dùng cho mọi email quan trọng trong 2 ngày, để ý thời gian soạn giảm bao nhiêu.
+- Ngày 3: chọn 1 báo cáo định kỳ, đưa số liệu cho AI dựng khung và viết nháp, bạn chỉ rà và chỉnh.
+- Ngày 4-5: lấy 1 file Excel đang làm dở, nhờ AI viết công thức hoặc tóm tắt dữ liệu — gõ thẳng yêu cầu bằng tiếng Việt.
+- Ngày 6-7: liệt kê mọi việc lặp lại trong tuần, đánh dấu việc nào đã có prompt, việc nào chưa — đó là danh sách học tiếp của bạn.
+
+**3 LỖI DÂN VĂN PHÒNG THƯỜNG GẶP**
+- Hỏi AI chung chung rồi kết luận "AI trả lời dở": thiếu bối cảnh thì ai cũng trả lời dở. Cách né: luôn cho AI biết vai trò, người nhận, mục đích trước khi giao việc.
+- Mỗi lần dùng lại gõ yêu cầu từ đầu: tốn thời gian và kết quả không ổn định. Cách né: việc nào làm quá 2 lần thì lưu thành prompt chuẩn.
+- Giấu sếp việc dùng AI: làm nhanh hơn nhưng không ai ghi nhận. Cách né: chủ động đề xuất quy trình mới cho cả nhóm — đây là cách được nhìn thấy.
 
 Một task vừa xong trong một phút. Nếu bạn học cách nối các task này thành quy trình tự động, mỗi ngày có thể lấy lại vài giờ — đó là bước tiếp theo đáng đầu tư.`,
     },
@@ -274,6 +309,17 @@ ${AGENT_BASE_RULES}`,
 
 **PROMPT TẠO VIDEO**
 "Video dọc 9:16, ánh sáng tự nhiên trong bếp gia đình Việt, quay cận cảnh đôi tay thao tác sản phẩm, 3 cảnh: tình huống bất tiện cũ, thao tác với sản phẩm mới, kết quả gọn gàng; nhịp cắt nhanh 2-3 giây mỗi cảnh, không lộ mặt."
+
+**VIỆC LÀM NGAY TRONG 7 NGÀY**
+- Ngày 1: chốt 1 ngách duy nhất trong 3 nhóm sản phẩm ở trên, đăng ký affiliate cho 3-5 sản phẩm trong ngách đó.
+- Ngày 2-4: mỗi ngày làm 1 video theo đúng script mẫu (quay bằng điện thoại hoặc dựng bằng công cụ AI), đăng đều một khung giờ.
+- Ngày 5: xem số liệu 3 video: video nào giữ chân qua giây thứ 3 tốt nhất thì nhân bản góc quay và kiểu hook đó.
+- Ngày 6-7: làm tiếp 2 video theo công thức thắng, gắn link giỏ hàng, theo dõi lượt bấm vào giỏ.
+
+**3 LỖI NGƯỜI MỚI LÀM AFFILIATE THƯỜNG GẶP**
+- Nhảy ngách liên tục: mỗi ngách một video thì thuật toán không biết đẩy bạn cho ai. Cách né: cam kết 1 ngách ít nhất 30 video.
+- Chọn sản phẩm theo hoa hồng cao thay vì theo độ dễ demo: video khó thuyết phục, không ra đơn. Cách né: ưu tiên sản phẩm nhìn thấy kết quả trong 15 giây.
+- Kỳ vọng ra đơn trong tuần đầu rồi bỏ: giai đoạn đầu là giai đoạn mua dữ liệu. Cách né: đặt mục tiêu theo số video đăng, không theo số đơn.
 
 Bạn vừa có sản phẩm, script, caption và prompt video trong một phút. Bước tiếp theo đáng học là xây cả dây chuyền: AI tìm sản phẩm, viết script, dựng video và phân tích đơn cho nhiều kênh cùng lúc.`,
     },
@@ -347,6 +393,17 @@ Tuần 2: hậu trường; số liệu gây tò mò; phản hồi người dùng
 - Tỷ lệ landing chuyển thành lead; dưới 15% cần sửa trang trước khi tăng ngân sách.
 - Tỷ lệ lead ra cuộc hẹn tư vấn; đo riêng theo nguồn để cắt kênh kém.
 
+**VIỆC LÀM NGAY TRONG 7 NGÀY**
+- Ngày 1-2: dùng AI research 3 đối thủ trực tiếp (định vị, giá, kênh, góc content họ đang thắng), tóm thành 1 trang.
+- Ngày 3-4: dựng lịch content 2 tuần theo khung ở trên, dùng AI viết nháp 5 bài đầu, bạn chỉ biên tập giọng thương hiệu.
+- Ngày 5: đổ số liệu ads tháng gần nhất cho AI phân tích: nhóm nào CPL cao bất thường, nhóm nào đáng tăng ngân sách.
+- Ngày 6-7: dựng khung báo cáo tuần chuẩn để từ nay AI điền số và viết nhận xét, bạn chỉ duyệt.
+
+**3 LỖI MARKETER THƯỜNG GẶP KHI DÙNG AI**
+- Dùng AI như người viết thuê, không đưa dữ liệu thật: content chung chung, không có insight. Cách né: luôn kèm số liệu, phản hồi khách, thông tin sản phẩm khi giao việc cho AI.
+- Đo lường bằng cảm giác: không biết AI giúp tiết kiệm bao nhiêu để đề xuất nhân rộng. Cách né: bấm giờ trước - sau cho từng loại việc trong 2 tuần.
+- Giữ kỹ năng cho riêng mình: một mình bạn nhanh không cứu được deadline cả team. Cách né: đóng gói prompt thành thư viện chung của team.
+
 Khung này AI dựng trong một phút. Bước tiếp theo đáng học là nối cả phễu thành hệ thống: AI research, sản xuất content, phân tích ads và báo cáo tự động hàng tuần.`,
     },
     courses: [
@@ -415,6 +472,17 @@ Tâm lý thật: khách chưa đủ tin hoặc chưa thấy cấp thiết; "bàn
 - Ngày 1: cảm ơn + tóm tắt 3 ý chính đã trao đổi + tài liệu đúng mối quan tâm.
 - Ngày 3: gửi một case khách tương tự hoàn cảnh + hỏi một câu mở.
 - Ngày 7: tạo lý do chốt nhẹ nhàng (thay đổi chính sách, lịch trống) + đề xuất 2 khung giờ hẹn.
+
+**VIỆC LÀM NGAY TRONG 7 NGÀY**
+- Ngày 1-2: ghi lại 5 lời từ chối bạn gặp nhiều nhất, dùng AI soạn 2 cách phản hồi cho mỗi lời, lưu thành "ngân hàng xử lý từ chối" của riêng bạn.
+- Ngày 3: áp call flow ở trên vào 3 cuộc gọi thật, để ý bước nào bạn hay bỏ qua nhất.
+- Ngày 4-5: soạn bộ tin nhắn follow-up ngày 1-3-7 bằng AI, cài lời nhắc để không sót khách nào đang treo.
+- Ngày 6-7: trước mỗi cuộc hẹn, dành 5 phút cho AI tóm tắt thông tin khách và gợi ý 3 câu hỏi mở đầu.
+
+**3 LỖI SALES THƯỜNG GẶP**
+- Đọc kịch bản như trả bài: khách nghe ra ngay. Cách né: dùng kịch bản làm khung, luyện đến khi nói được bằng lời của mình.
+- Chỉ chăm khách mới, bỏ data khách cũ: mỏ vàng nằm ở người từng quan tâm. Cách né: mỗi tuần dành 1 buổi cho AI soạn tin tái kết nối tệp cũ.
+- Không ghi chú sau cuộc gọi: lần gọi sau bắt đầu lại từ đầu. Cách né: nói lại nội dung chính vào điện thoại, để AI chuyển thành ghi chú CRM.
 
 Một Agent huấn luyện được như vậy trong một phút. Bước tiếp theo đáng học là xây trợ lý sales của riêng bạn: tự ghi chú CRM, nhắc follow-up và luyện kịch bản mỗi ngày.`,
     },
@@ -494,7 +562,18 @@ Chúng tôi tìm một bạn content biến ý tưởng thành video ngắn có 
 - Ngày 4: nhận feedback, sửa và đăng video đầu tiên.
 - Ngày 5: tổng kết tuần, thống nhất mục tiêu tháng đầu.
 
-Bộ tài liệu này AI tạo trong một phút. Bước tiếp theo đáng học là chuẩn hóa cả quy trình nhân sự bằng AI: từ tuyển dụng, onboarding đến đào tạo nội bộ tự cập nhật.`,
+**VIỆC LÀM NGAY TRONG 7 NGÀY**
+- Ngày 1-2: dùng bộ JD + scorecard ở trên cho vị trí đang tuyển, đăng tin và chấm 5 CV đầu tiên theo scorecard thay vì theo cảm giác.
+- Ngày 3: chọn 1 loại giấy tờ lặp lại nhiều nhất (hợp đồng, quyết định, thông báo), dựng mẫu chuẩn để AI điền thông tin từng trường hợp.
+- Ngày 4-5: lấy 1 bảng chấm công hoặc bảng kê đang làm tay, nhờ AI viết công thức tổng hợp và chỉ ra dòng bất thường.
+- Ngày 6-7: dựng checklist onboarding chuẩn từ mẫu ở trên, lưu thành quy trình dùng lại cho mọi nhân sự mới.
+
+**3 LỖI HR / KẾ TOÁN THƯỜNG GẶP**
+- Đưa dữ liệu nhạy cảm (lương, số tài khoản, CCCD) vào công cụ AI công cộng: rủi ro bảo mật. Cách né: ẩn danh dữ liệu trước khi đưa AI xử lý, chỉ giữ cấu trúc.
+- Tin 100% số liệu AI tính: AI hỗ trợ rất tốt nhưng vẫn cần bước rà soát. Cách né: luôn đối chiếu ngẫu nhiên vài dòng trước khi chốt sổ.
+- Làm mẫu mới mỗi lần phát sinh: tốn giờ và thiếu nhất quán. Cách né: mọi văn bản làm quá 2 lần đều phải có mẫu chuẩn.
+
+Bộ tài liệu này AI tạo trong một phút. Bước tiếp theo đáng học là chuẩn hóa cả quy trình nhân sự và sổ sách bằng AI: từ tuyển dụng, giấy tờ đến báo cáo tự cập nhật.`,
     },
     courses: [
       { name: "AI Business System", reason: "Chuẩn hóa quy trình nhân sự và vận hành nội bộ bằng AI." },
@@ -569,6 +648,17 @@ ${AGENT_BASE_RULES}`,
 - Ghép 5 video cùng chủ đề thành 1 video dài YouTube.
 - Trích quote mạnh nhất làm ảnh đăng story.
 - Gom comment hay làm video phản hồi tiếp theo.
+
+**VIỆC LÀM NGAY TRONG 7 NGÀY**
+- Ngày 1: dùng AI tạo ngân hàng 30 ý tưởng cho chủ đề kênh của bạn, chấm điểm và giữ lại 10 ý mạnh nhất.
+- Ngày 2-4: mỗi ngày sản xuất 1 video theo đúng cấu trúc script ở trên (hook - thân - CTA), đăng cùng khung giờ.
+- Ngày 5: xem lại số liệu: hook nào giữ chân qua giây 3 tốt nhất, chủ đề nào có lượt chia sẻ — đó là công thức của kênh bạn.
+- Ngày 6-7: lấy video tốt nhất, tái sử dụng thành 4 định dạng khác theo lịch đa kênh ở trên.
+
+**3 LỖI CREATOR THƯỜNG GẶP**
+- Đổi phong cách liên tục vì sốt ruột: người xem không kịp nhớ bạn là ai. Cách né: giữ 1 định dạng chủ lực ít nhất 1 tháng.
+- Dùng AI viết script rồi đọc nguyên văn: mất chất giọng riêng — thứ duy nhất đối thủ không sao chép được. Cách né: AI viết khung, bạn kể lại bằng lời của mình.
+- Chỉ nhìn view, không nhìn tỷ lệ giữ chân: view ảo không xây được kênh. Cách né: mỗi tuần rà 3 chỉ số: giữ chân 3 giây, xem hết, chia sẻ.
 
 Gói nội dung này AI tạo trong một phút. Bước tiếp theo đáng học là xây dây chuyền nội dung: AI tìm ý tưởng, viết script, dựng video và phân tích số liệu cho cả tuần chỉ trong một buổi.`,
     },

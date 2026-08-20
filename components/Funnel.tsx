@@ -10,6 +10,7 @@ import Report from "@/components/Report";
 import AgentDemo from "@/components/AgentDemo";
 import Roadmap from "@/components/Roadmap";
 import { computeScore, computeSavings, computeLeadScore } from "@/lib/scoring";
+import { PERSONAS } from "@/lib/personas";
 import { track, getSessionId } from "@/lib/tracking";
 import type {
   AssessmentAnswers,
@@ -144,9 +145,20 @@ export default function Funnel({
         />
       )}
 
-      {step === "agent_demo" && answers && (
+      {step === "agent_demo" && answers && score && (
         <AgentDemo
           persona={persona}
+          context={{
+            score: score.score,
+            level: score.level,
+            levelName: score.levelName,
+            topTaskLabels: PERSONAS[persona].taskLibrary
+              .filter((t) => answers.topTasks.includes(t.id))
+              .map((t) => t.label),
+            painPoint: answers.painPoint,
+            scale: answers.scale,
+            hoursPerWeek: answers.repetitiveHoursPerWeek,
+          }}
           onDone={() => {
             behavior.current.demoDone = true;
             behavior.current.roadmapViewed = true;
