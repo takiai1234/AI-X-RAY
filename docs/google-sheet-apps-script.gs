@@ -59,7 +59,7 @@ var PERSONA_LABEL = {
   affiliate: "Affiliate",
   marketing: "Marketing",
   sales: "Sales",
-  hr: "HR",
+  hr: "HR / Kế toán",
   creator: "Creator",
 };
 

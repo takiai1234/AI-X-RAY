@@ -48,7 +48,7 @@ const PERSONA_SHORT: Record<string, string> = {
   affiliate: "Affiliate",
   marketing: "Marketing",
   sales: "Sales",
-  hr: "HR",
+  hr: "HR/KT",
   creator: "Creator",
 };
 

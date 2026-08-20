@@ -36,7 +36,7 @@ const PERSONA_LABEL: Record<string, string> = {
   affiliate: "Affiliate",
   marketing: "Marketing",
   sales: "Sales",
-  hr: "HR",
+  hr: "HR / Kế toán",
   creator: "Creator",
 };
 

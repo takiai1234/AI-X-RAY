@@ -48,9 +48,9 @@ const BENEFITS: Record<PersonaId, [string, string][]> = {
     ["🗺️", "Lộ trình 30 ngày xây trợ lý AI cho việc bán hàng"],
   ],
   hr: [
-    ["📋", "Quét khối lượng tuyển dụng, đào tạo có thể AI hóa"],
+    ["📋", "Quét khối lượng giấy tờ, nhập liệu, tuyển dụng có thể AI hóa"],
     ["🤖", "AI HR Assistant tạo thử JD + scorecard cho vị trí bạn đang tuyển"],
-    ["🗺️", "Lộ trình 30 ngày chuẩn hóa quy trình nhân sự bằng AI"],
+    ["🗺️", "Lộ trình 30 ngày AI hóa quy trình nhân sự và sổ sách"],
   ],
   creator: [
     ["💡", "Biết khâu nào trong sản xuất nội dung đang làm bạn kiệt sức"],
