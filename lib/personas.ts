@@ -98,6 +98,8 @@ Tiền mất lớn nhất không nằm ở số giờ, mà ở sản lượng do
       "Automation luồng lặp lại đầu tiên",
       "AI Agent theo phòng ban",
     ],
+    opportunityNote:
+      "Cùng đội ngũ hiện tại, sản lượng content và chăm khách có thể tăng 5-10 lần khi có AI: 1 nhân sự thủ công ra 2-3 bài/ngày, có AI ra 20-30 bài chất lượng — thay vì tiếp cận vài nghìn người, doanh nghiệp có thể tiếp cận hàng trăm nghìn người/tháng. Doanh thu đang bỏ lỡ vì sản lượng thấp thường lớn hơn nhiều lần con số giờ công ở trên (ước tính minh họa).",
   },
 
   seller: {
@@ -192,6 +194,8 @@ Một Agent đã tạo được bộ content và kịch bản này trong một p
       "Automation inbox và đơn hàng",
       "AI Agent quản lý content đa kênh",
     ],
+    opportunityNote:
+      "Làm content thủ công chỉ ra 2-3 bài/ngày; có AI cùng thời gian đó ra 20-30 bài — số lần 'thử viral' tăng gấp 10, tiếp cận từ vài nghìn lên hàng trăm nghìn người/tháng. Chỉ cần 0,1% thành đơn là hàng trăm đơn đang bị bỏ lỡ, chưa kể inbox ban đêm không ai trực (ước tính minh họa).",
   },
 
   office: {
@@ -273,6 +277,8 @@ Một task vừa xong trong một phút. Nếu bạn học cách nối các task
       "Quy trình cá nhân tự động",
       "Trợ lý AI cá nhân hoàn chỉnh",
     ],
+    opportunityNote:
+      "Người biết dùng AI xử lý được gấp 5-10 lần khối lượng cùng vị trí — khoảng cách này đang trở thành khoảng cách lương thưởng và cơ hội thăng tiến. Mỗi buổi tối bị việc lặp lại ăn mất còn là một buổi không thể học kỹ năng mới hoặc kiếm thêm thu nhập (ước tính minh họa).",
   },
 
   affiliate: {
@@ -358,6 +364,8 @@ Bạn vừa có sản phẩm, script, caption và prompt video trong một phút
       "Phân tích dữ liệu đơn và tối ưu",
       "Scale đa kênh bằng Agent",
     ],
+    opportunityNote:
+      "Affiliate là trò chơi xác suất: làm tay 1 video/ngày = 30 lượt thử viral/tháng; có AI làm 5-10 video/ngày = 150-300 lượt thử — xác suất trúng video ăn đơn tăng gấp 5-10 lần với cùng thời gian bỏ ra (ước tính minh họa).",
   },
 
   marketing: {
@@ -447,6 +455,8 @@ Khung này AI dựng trong một phút. Bước tiếp theo đáng học là n�
       "Báo cáo marketing tự động",
       "AI Agent marketing hoàn chỉnh",
     ],
+    opportunityNote:
+      "Đội thủ công ra 2-3 bài/ngày; cùng đội đó có AI ra 20-30 bài chất lượng — tiếp cận từ vài nghìn lên hàng trăm nghìn người/tháng. Với chuyển đổi chỉ 0,1%, đó là hàng trăm lead bỏ lỡ mỗi tháng, nhân với giá trị lead của ngành bạn sẽ lớn hơn nhiều con số ở trên (ước tính minh họa).",
   },
 
   sales: {
@@ -532,6 +542,8 @@ Một Agent huấn luyện được như vậy trong một phút. Bước tiếp
       "Automation follow-up",
       "AI Sales Coach luyện tập hàng ngày",
     ],
+    opportunityNote:
+      "Chăm tay được 20-30 khách/tuần; có AI soạn tin và nhắc lịch, cùng thời gian đó chạm được 100-200 khách. Chỉ cần 2-3 hợp đồng rơi mỗi tháng vì quên follow-up, số tiền mất đã lớn hơn con số giờ công ở trên (ước tính minh họa).",
   },
 
   hr: {
@@ -627,6 +639,8 @@ Bộ tài liệu này AI tạo trong một phút. Bước tiếp theo đáng h�
       "Báo cáo nhân sự / tài chính tự động",
       "Automation quy trình giấy tờ định kỳ",
     ],
+    opportunityNote:
+      "Một vị trí kinh doanh trống thêm 1 tháng vì tuyển chậm là 1 tháng doanh số của vị trí đó mất trắng — thường lớn hơn nhiều lần lương của chính vị trí ấy. Số liệu chốt trễ còn khiến công ty ra quyết định trên dữ liệu cũ (ước tính minh họa).",
   },
 
   creator: {
@@ -720,6 +734,8 @@ Gói nội dung này AI tạo trong một phút. Bước tiếp theo đáng họ
       "Tái sử dụng đa nền tảng tự động",
       "AI Agent phân tích và đề xuất nội dung",
     ],
+    opportunityNote:
+      "Làm tay 3-4 video/tuần = 15 lượt được thuật toán 'cho thử' mỗi tháng; có AI hỗ trợ cả dây chuyền ra 1-2 video/ngày = 30-60 lượt thử — xác suất có video trăm nghìn view tăng theo cấp số, mỗi video viral hụt là hàng nghìn follow và hợp đồng booking lỡ mất (ước tính minh họa).",
   },
 };
 

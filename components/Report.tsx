@@ -151,12 +151,20 @@ export default function Report({
             Quy đổi theo chi phí giờ công {formatVnd(savings.hourlyRate)}/giờ{" "}
             <b>theo mức bạn khai báo</b>, đây là khoảng{" "}
             <b className="text-cam">{formatVnd(savings.moneyPerMonth)}/tháng</b>{" "}
-            <b>cơ hội tối ưu</b>.
+            — nhưng đây mới chỉ là <b>thời gian và tiền bạc quy trực tiếp</b>.
           </p>
+
+          <div className="mt-3 rounded-xl border border-cam/40 bg-white/10 p-3">
+            <p className="text-sm font-bold text-cam">
+              ⚠️ Chưa tính chi phí cơ hội gián tiếp — phần thường lớn hơn nhiều
+            </p>
+            <p className="mt-1 text-sm text-slate-100">{persona.opportunityNote}</p>
+          </div>
+
           <p className="mt-2 text-[11px] text-slate-300">
-            * Đây là con số cơ hội ước tính dựa trên số giờ và chi phí giờ công
-            bạn khai báo, cùng tỷ lệ hỗ trợ minh họa theo từng loại việc — không
-            phải cam kết tiết kiệm.
+            * Các con số là ước tính cơ hội dựa trên khai báo của bạn và tỷ lệ
+            hỗ trợ minh họa theo từng loại việc — không phải cam kết tiết kiệm
+            hay doanh thu.
           </p>
         </div>
       </Section>

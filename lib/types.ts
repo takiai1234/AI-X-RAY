@@ -60,6 +60,7 @@ export interface PersonaDef {
   agent: AgentDemoConfig;
   courses: CourseDef[];
   roadmapPhases: string[]; // 5 giai đoạn 30 ngày
+  opportunityNote: string; // chi phí cơ hội gián tiếp (sản lượng) hiển thị trong report
 }
 
 export interface ScoreBreakdownItem {
