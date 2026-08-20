@@ -29,6 +29,21 @@ type Settings = {
     nen: string;
     navyDark: string;
   };
+  email: {
+    smtpHost: string;
+    smtpPort: number;
+    smtpUser: string;
+    smtpPass: string;
+    fromName: string;
+    fromEmail: string;
+    sequence: {
+      id: string;
+      day: number;
+      enabled: boolean;
+      subject: string;
+      body: string;
+    }[];
+  };
 };
 
 const DEFAULT_COLORS = {
@@ -63,7 +78,7 @@ type LeadRow = {
   utm?: Record<string, string>;
 };
 
-type Tab = "noidung" | "mausac" | "khoahoc" | "pixel" | "dulieu" | "leads" | "taikhoan";
+type Tab = "noidung" | "mausac" | "khoahoc" | "pixel" | "dulieu" | "email" | "leads" | "taikhoan";
 
 const PERSONA_SHORT: Record<string, string> = {
   ceo: "CEO",
@@ -100,6 +115,17 @@ export default function AdminPage() {
   // tab leads
   const [leads, setLeads] = useState<LeadRow[] | null>(null);
   const [leadFilter, setLeadFilter] = useState("");
+
+  // tab email
+  const [emailStats, setEmailStats] = useState<{
+    subscribers: number;
+    unsubscribed: number;
+    totalSent: number;
+    lastErrors: { email: string; error?: string }[];
+    cronConfigured: boolean;
+  } | null>(null);
+  const [testTo, setTestTo] = useState("");
+  const [openTpl, setOpenTpl] = useState<string | null>(null);
 
   // ảnh share (og:image)
   const [ogVersion, setOgVersion] = useState<number | null>(null);
@@ -142,6 +168,12 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (tab === "noidung" && authed) loadOg();
+    if (tab === "email" && authed) {
+      fetch("/api/admin/email-test")
+        .then((r) => r.json())
+        .then(setEmailStats)
+        .catch(() => {});
+    }
     if (tab === "leads" && authed) {
       fetch("/api/admin/leads?days=90")
         .then((r) => r.json())
@@ -368,6 +400,7 @@ export default function AdminPage() {
             ["khoahoc", "🎓 Khóa học"],
             ["pixel", "📡 Pixel"],
             ["dulieu", "📊 Kết nối"],
+            ["email", "✉️ Email"],
             ["leads", "📥 Leads"],
             ["taikhoan", "🔐 Tài khoản"],
           ] as [Tab, string][]
@@ -733,6 +766,159 @@ export default function AdminPage() {
           >
             🧪 Gửi 1 lead test để kiểm tra kết nối
           </button>
+        </div>
+      )}
+
+      {/* Tab Email */}
+      {tab === "email" && (
+        <div className="mt-5 space-y-6">
+          {/* Thống kê */}
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              ["Đang trong chuỗi", emailStats?.subscribers ?? "—"],
+              ["Email đã gửi", emailStats?.totalSent ?? "—"],
+              ["Đã hủy đăng ký", emailStats?.unsubscribed ?? "—"],
+            ].map(([label, val]) => (
+              <div key={String(label)} className="card !p-3 text-center">
+                <p className="text-2xl font-extrabold text-navy">{val}</p>
+                <p className="text-xs text-slate-500">{label}</p>
+              </div>
+            ))}
+          </div>
+          {emailStats && !emailStats.cronConfigured && (
+            <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
+              ⚠️ Server chưa cấu hình CRON_SECRET — chuỗi email chưa tự chạy.
+            </p>
+          )}
+          {emailStats?.lastErrors?.length ? (
+            <div className="rounded-xl bg-red-50 p-3 text-xs text-red-700">
+              <p className="font-bold">Lỗi gửi gần nhất:</p>
+              {emailStats.lastErrors.map((e) => (
+                <p key={e.email}>{e.email}: {e.error}</p>
+              ))}
+            </div>
+          ) : null}
+
+          {/* Cấu hình SMTP */}
+          <div>
+            <h3 className="text-base font-bold text-navy-dark">Cấu hình gửi (SMTP)</h3>
+            <p className="mt-1 text-xs text-slate-400">
+              Dùng SMTP của Brevo (miễn phí 300 email/ngày), Gmail App Password, hoặc dịch vụ bất kỳ.
+              Với Brevo: host smtp-relay.brevo.com, port 587, user là email đăng nhập, pass là SMTP key.
+            </p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <Field label="SMTP Host">
+                <input className="input" placeholder="smtp-relay.brevo.com"
+                  value={s.email.smtpHost}
+                  onChange={(e) => set({ email: { ...s.email, smtpHost: e.target.value.trim() } })} />
+              </Field>
+              <Field label="SMTP Port">
+                <input className="input" type="number" placeholder="587"
+                  value={s.email.smtpPort}
+                  onChange={(e) => set({ email: { ...s.email, smtpPort: Number(e.target.value) } })} />
+              </Field>
+              <Field label="SMTP User">
+                <input className="input" placeholder="ai@taki.vn"
+                  value={s.email.smtpUser}
+                  onChange={(e) => set({ email: { ...s.email, smtpUser: e.target.value.trim() } })} />
+              </Field>
+              <Field label="SMTP Password / Key">
+                <input className="input" type="password" placeholder="••••••••"
+                  value={s.email.smtpPass}
+                  onChange={(e) => set({ email: { ...s.email, smtpPass: e.target.value } })} />
+              </Field>
+              <Field label="Tên người gửi">
+                <input className="input" placeholder="TAKI ACADEMY"
+                  value={s.email.fromName}
+                  onChange={(e) => set({ email: { ...s.email, fromName: e.target.value } })} />
+              </Field>
+              <Field label="Email người gửi" hint="Nên dùng email cùng domain đã xác thực SPF/DKIM để không vào spam">
+                <input className="input" placeholder="noreply@taki.vn"
+                  value={s.email.fromEmail}
+                  onChange={(e) => set({ email: { ...s.email, fromEmail: e.target.value.trim() } })} />
+              </Field>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <input className="input flex-1" placeholder="Email nhận thử, ví dụ ai@taki.vn"
+                value={testTo} onChange={(e) => setTestTo(e.target.value.trim())} />
+              <button className="btn-ghost whitespace-nowrap !py-2"
+                onClick={async () => {
+                  const res = await fetch("/api/admin/email-test", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ to: testTo }),
+                  });
+                  const d = await res.json().catch(() => ({}));
+                  alert(res.ok ? "✓ Đã gửi email test — kiểm tra hộp thư (nhớ Lưu thay đổi trước khi test)" : "✗ " + (d.error ?? "Thất bại"));
+                }}>
+                🧪 Gửi thử
+              </button>
+            </div>
+          </div>
+
+          {/* Chuỗi email */}
+          <div>
+            <h3 className="text-base font-bold text-navy-dark">
+              Chuỗi 30 ngày ({s.email.sequence.filter((t) => t.enabled).length}/{s.email.sequence.length} email đang bật)
+            </h3>
+            <p className="mt-1 text-xs text-slate-400">
+              Biến chèn được vào tiêu đề và nội dung: {"{ten} {ai_score} {ai_level} {level_name} {nhom} {gap} {gio_tiet_kiem} {tien_co_hoi} {khoa_hoc} {khoa_hoc_url}"}
+            </p>
+            <div className="mt-3 space-y-2">
+              {s.email.sequence.map((t, i) => (
+                <div key={t.id} className="rounded-xl border-2 border-slate-200 bg-white">
+                  <div className="flex items-center gap-3 p-3">
+                    <input type="checkbox" className="h-5 w-5 accent-current text-navy" checked={t.enabled}
+                      onChange={(e) => {
+                        const seq = [...s.email.sequence];
+                        seq[i] = { ...t, enabled: e.target.checked };
+                        set({ email: { ...s.email, sequence: seq } });
+                      }} />
+                    <span className="rounded-full bg-navy px-2.5 py-0.5 text-xs font-bold text-white">
+                      Ngày {t.day}
+                    </span>
+                    <button className="flex-1 truncate text-left text-sm font-semibold text-navy-dark"
+                      onClick={() => setOpenTpl(openTpl === t.id ? null : t.id)}>
+                      {t.subject}
+                    </button>
+                    <button className="text-xs text-navy underline"
+                      onClick={() => setOpenTpl(openTpl === t.id ? null : t.id)}>
+                      {openTpl === t.id ? "Thu gọn" : "Sửa"}
+                    </button>
+                  </div>
+                  {openTpl === t.id && (
+                    <div className="space-y-2 border-t border-slate-100 p-3">
+                      <div className="flex items-center gap-2">
+                        <label className="text-xs font-semibold text-slate-500">Gửi sau (ngày):</label>
+                        <input className="input !w-20" type="number" min={0} value={t.day}
+                          onChange={(e) => {
+                            const seq = [...s.email.sequence];
+                            seq[i] = { ...t, day: Number(e.target.value) };
+                            set({ email: { ...s.email, sequence: seq } });
+                          }} />
+                      </div>
+                      <input className="input" value={t.subject}
+                        onChange={(e) => {
+                          const seq = [...s.email.sequence];
+                          seq[i] = { ...t, subject: e.target.value };
+                          set({ email: { ...s.email, sequence: seq } });
+                        }} />
+                      <textarea className="input" rows={12} value={t.body}
+                        onChange={(e) => {
+                          const seq = [...s.email.sequence];
+                          seq[i] = { ...t, body: e.target.value };
+                          set({ email: { ...s.email, sequence: seq } });
+                        }} />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-slate-400">
+              Hệ thống tự gửi mỗi giờ cho lead có email, mỗi lead tối đa 1 email/giờ theo đúng lịch ngày.
+              Mọi email đều có link hủy đăng ký ở cuối.
+            </p>
+          </div>
         </div>
       )}
 

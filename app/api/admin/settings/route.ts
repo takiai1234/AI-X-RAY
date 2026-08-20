@@ -33,6 +33,15 @@ export async function POST(req: Request) {
     pixels: { ...cur.pixels, ...(b.pixels ?? {}) },
     integrations: { ...cur.integrations, ...(b.integrations ?? {}) },
     colors: sanitizeColors(b.colors ?? {}, cur.colors),
+    email: b.email
+      ? {
+          ...cur.email,
+          ...b.email,
+          sequence: Array.isArray(b.email.sequence)
+            ? b.email.sequence
+            : cur.email.sequence,
+        }
+      : cur.email,
   };
   await saveSettings(next);
   return Response.json({ ok: true, settings: next });

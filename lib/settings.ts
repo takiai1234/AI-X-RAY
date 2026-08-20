@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { PERSONAS, COURSE_URLS } from "./personas";
 import { DEFAULT_COLORS, sanitizeColors, type ThemeColors } from "./colors";
+import { defaultEmailConfig, type EmailConfig } from "./email";
 import type { PublicSettings } from "./types";
 
 // Cấu hình site chỉnh được từ trang /admin, lưu tại data/settings.json.
@@ -19,6 +20,7 @@ export interface SiteSettings extends PublicSettings {
     crmWebhookUrl: string; // webhook CRM/n8n/Lark (ưu tiên hơn env CRM_WEBHOOK_URL)
   };
   colors: ThemeColors; // bộ màu giao diện, đổi từ /admin
+  email: EmailConfig; // SMTP + chuỗi email nurture 30 ngày
 }
 
 const FILE = path.join(process.cwd(), "data", "settings.json");
@@ -50,6 +52,7 @@ export function defaultSettings(): SiteSettings {
       crmWebhookUrl: "",
     },
     colors: { ...DEFAULT_COLORS },
+    email: defaultEmailConfig(),
   };
 }
 
@@ -67,6 +70,37 @@ function mergeCourseUrls(
   return out;
 }
 
+// Chuỗi email: template đã lưu (theo id) đè lên mặc định; template mặc định mới
+// thêm trong code vẫn xuất hiện cho bản cài cũ.
+function mergeEmailConfig(
+  def: EmailConfig,
+  raw: Partial<EmailConfig> | undefined,
+): EmailConfig {
+  if (!raw) return def;
+  const savedSeq = Array.isArray(raw.sequence) ? raw.sequence : [];
+  const sequence = def.sequence.map((t) => {
+    const saved = savedSeq.find((s) => s?.id === t.id);
+    return saved
+      ? {
+          ...t,
+          day: Number(saved.day) >= 0 ? Number(saved.day) : t.day,
+          enabled: saved.enabled !== false,
+          subject: saved.subject || t.subject,
+          body: saved.body || t.body,
+        }
+      : t;
+  });
+  return {
+    smtpHost: raw.smtpHost ?? def.smtpHost,
+    smtpPort: Number(raw.smtpPort) > 0 ? Number(raw.smtpPort) : def.smtpPort,
+    smtpUser: raw.smtpUser ?? def.smtpUser,
+    smtpPass: raw.smtpPass ?? def.smtpPass,
+    fromName: raw.fromName || def.fromName,
+    fromEmail: raw.fromEmail ?? def.fromEmail,
+    sequence,
+  };
+}
+
 export async function getSettings(): Promise<SiteSettings> {
   const def = defaultSettings();
   try {
@@ -79,6 +113,7 @@ export async function getSettings(): Promise<SiteSettings> {
       pixels: { ...def.pixels, ...(raw.pixels ?? {}) },
       integrations: { ...def.integrations, ...(raw.integrations ?? {}) },
       colors: sanitizeColors(raw.colors),
+      email: mergeEmailConfig(def.email, raw.email),
     };
   } catch {
     return def;
