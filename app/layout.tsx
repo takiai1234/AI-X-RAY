@@ -4,6 +4,7 @@ import "./globals.css";
 import Pixels from "@/components/Pixels";
 import { getSettings } from "@/lib/settings";
 import { ogImageUrl } from "@/lib/ogImage";
+import { themeCss } from "@/lib/colors";
 
 // Render động để nội dung/pixel chỉnh từ /admin áp dụng ngay, không cần build lại
 export const dynamic = "force-dynamic";
@@ -37,6 +38,10 @@ export default async function RootLayout({
   const settings = await getSettings();
   return (
     <html lang="vi">
+      <head>
+        {/* Ghi đè biến màu theo cấu hình admin — áp dụng ngay không cần build */}
+        <style id="theme-vars">{themeCss(settings.colors)}</style>
+      </head>
       <body className={`${montserrat.className} bg-nen text-navy-dark antialiased`}>
         {children}
         <Pixels {...settings.pixels} />

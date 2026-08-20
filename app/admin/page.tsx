@@ -23,7 +23,31 @@ type Settings = {
     sheetWebhookUrl: string;
     crmWebhookUrl: string;
   };
+  colors: {
+    navy: string;
+    cam: string;
+    nen: string;
+    navyDark: string;
+  };
 };
+
+const DEFAULT_COLORS = {
+  navy: "#1E40AF",
+  cam: "#F97316",
+  nen: "#F8FAFC",
+  navyDark: "#1E293B",
+};
+
+const COLOR_FIELDS: {
+  key: keyof typeof DEFAULT_COLORS;
+  label: string;
+  hint: string;
+}[] = [
+  { key: "navy", label: "Màu chính", hint: "Tiêu đề phụ, viền chọn, huy hiệu — tông tạo cảm giác tin cậy" },
+  { key: "cam", label: "Màu nhấn / nút CTA", hint: "Toàn bộ nút hành động, số liệu nổi bật, thanh tiến trình" },
+  { key: "nen", label: "Màu nền trang", hint: "Nền sáng phía sau toàn bộ nội dung" },
+  { key: "navyDark", label: "Màu chữ / nền tối", hint: "Chữ tiêu đề và các khối nền tối (card kết quả, social proof)" },
+];
 
 type LeadRow = {
   session_id?: string;
@@ -39,7 +63,7 @@ type LeadRow = {
   utm?: Record<string, string>;
 };
 
-type Tab = "noidung" | "khoahoc" | "pixel" | "dulieu" | "leads" | "taikhoan";
+type Tab = "noidung" | "mausac" | "khoahoc" | "pixel" | "dulieu" | "leads" | "taikhoan";
 
 const PERSONA_SHORT: Record<string, string> = {
   ceo: "CEO",
@@ -340,6 +364,7 @@ export default function AdminPage() {
         {(
           [
             ["noidung", "📝 Nội dung"],
+            ["mausac", "🎨 Màu sắc"],
             ["khoahoc", "🎓 Khóa học"],
             ["pixel", "📡 Pixel"],
             ["dulieu", "📊 Kết nối"],
@@ -494,6 +519,73 @@ export default function AdminPage() {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Tab Màu sắc */}
+      {tab === "mausac" && (
+        <div className="mt-5 space-y-5">
+          <p className="text-sm text-slate-500">
+            Đổi bộ màu toàn site (trang chủ, landing tệp, bài test, report).
+            Bấm Lưu thay đổi là áp dụng ngay.
+          </p>
+
+          {COLOR_FIELDS.map((f) => (
+            <Field key={f.key} label={f.label} hint={f.hint}>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  className="h-11 w-16 cursor-pointer rounded-lg border-2 border-slate-200"
+                  value={s.colors?.[f.key] ?? DEFAULT_COLORS[f.key]}
+                  onChange={(e) =>
+                    set({ colors: { ...DEFAULT_COLORS, ...s.colors, [f.key]: e.target.value.toUpperCase() } })
+                  }
+                />
+                <input
+                  className="input !w-36 font-mono uppercase"
+                  maxLength={7}
+                  value={s.colors?.[f.key] ?? DEFAULT_COLORS[f.key]}
+                  onChange={(e) =>
+                    set({ colors: { ...DEFAULT_COLORS, ...s.colors, [f.key]: e.target.value } })
+                  }
+                />
+              </div>
+            </Field>
+          ))}
+
+          {/* Xem trước nhanh */}
+          <div
+            className="rounded-2xl p-5"
+            style={{ background: s.colors?.nen ?? DEFAULT_COLORS.nen }}
+          >
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Xem trước</p>
+            <p className="mt-2 text-xl font-extrabold" style={{ color: s.colors?.navyDark ?? DEFAULT_COLORS.navyDark }}>
+              Bạn đang bỏ phí{" "}
+              <span style={{ color: s.colors?.cam ?? DEFAULT_COLORS.cam }}>bao nhiêu giờ</span>{" "}
+              mỗi tháng?
+            </p>
+            <div className="mt-3 flex gap-2">
+              <span
+                className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
+                style={{ background: s.colors?.cam ?? DEFAULT_COLORS.cam }}
+              >
+                🔍 Quét miễn phí trong 2 phút
+              </span>
+              <span
+                className="rounded-xl px-4 py-2.5 text-sm font-bold text-white"
+                style={{ background: s.colors?.navy ?? DEFAULT_COLORS.navy }}
+              >
+                AI X-RAY
+              </span>
+            </div>
+          </div>
+
+          <button
+            className="btn-ghost w-full"
+            onClick={() => set({ colors: { ...DEFAULT_COLORS } })}
+          >
+            ↩️ Khôi phục màu mặc định (navy / cam TAKI)
+          </button>
         </div>
       )}
 

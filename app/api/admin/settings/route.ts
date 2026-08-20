@@ -1,5 +1,6 @@
 import { isAuthed } from "@/lib/adminAuth";
 import { getSettings, saveSettings, defaultSettings } from "@/lib/settings";
+import { sanitizeColors } from "@/lib/colors";
 
 export async function GET(req: Request) {
   if (!(await isAuthed(req))) {
@@ -31,6 +32,7 @@ export async function POST(req: Request) {
       Number(b.hourlyRate) > 0 ? Number(b.hourlyRate) : cur.hourlyRate,
     pixels: { ...cur.pixels, ...(b.pixels ?? {}) },
     integrations: { ...cur.integrations, ...(b.integrations ?? {}) },
+    colors: sanitizeColors(b.colors ?? {}, cur.colors),
   };
   await saveSettings(next);
   return Response.json({ ok: true, settings: next });

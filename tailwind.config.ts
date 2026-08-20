@@ -8,16 +8,17 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Màu lấy từ CSS variables (đổi được từ /admin, không cần build lại)
       colors: {
         navy: {
-          DEFAULT: "#1E40AF",
-          dark: "#1E293B",
+          DEFAULT: "rgb(var(--c-navy) / <alpha-value>)",
+          dark: "rgb(var(--c-navy-dark) / <alpha-value>)",
         },
         cam: {
-          DEFAULT: "#F97316",
-          dark: "#EA580C",
+          DEFAULT: "rgb(var(--c-cam) / <alpha-value>)",
+          dark: "rgb(var(--c-cam-dark) / <alpha-value>)",
         },
-        nen: "#F8FAFC",
+        nen: "rgb(var(--c-nen) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["Montserrat", "system-ui", "sans-serif"],

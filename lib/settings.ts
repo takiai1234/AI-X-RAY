@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { PERSONAS, COURSE_URLS } from "./personas";
+import { DEFAULT_COLORS, sanitizeColors, type ThemeColors } from "./colors";
 import type { PublicSettings } from "./types";
 
 // Cấu hình site chỉnh được từ trang /admin, lưu tại data/settings.json.
@@ -17,6 +18,7 @@ export interface SiteSettings extends PublicSettings {
     sheetWebhookUrl: string; // Google Apps Script Web App URL — lead đổ vào Google Sheet
     crmWebhookUrl: string; // webhook CRM/n8n/Lark (ưu tiên hơn env CRM_WEBHOOK_URL)
   };
+  colors: ThemeColors; // bộ màu giao diện, đổi từ /admin
 }
 
 const FILE = path.join(process.cwd(), "data", "settings.json");
@@ -47,6 +49,7 @@ export function defaultSettings(): SiteSettings {
       sheetWebhookUrl: "",
       crmWebhookUrl: "",
     },
+    colors: { ...DEFAULT_COLORS },
   };
 }
 
@@ -61,6 +64,7 @@ export async function getSettings(): Promise<SiteSettings> {
       hourlyRate: Number(raw.hourlyRate) > 0 ? Number(raw.hourlyRate) : def.hourlyRate,
       pixels: { ...def.pixels, ...(raw.pixels ?? {}) },
       integrations: { ...def.integrations, ...(raw.integrations ?? {}) },
+      colors: sanitizeColors(raw.colors),
     };
   } catch {
     return def;

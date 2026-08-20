@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Màu mặc định (bị ghi đè bởi <style id="theme-vars"> khi admin đổi màu) */
+:root {
+  --c-navy: 30 64 175;
+  --c-navy-dark: 30 41 59;
+  --c-cam: 249 115 22;
+  --c-cam-dark: 219 101 19;
+  --c-nen: 248 250 252;
+}
+
 @layer components {
   .btn-cta {
     @apply inline-flex items-center justify-center gap-2 rounded-xl bg-cam px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-cam/30 transition hover:bg-cam-dark hover:shadow-xl active:scale-[0.98];
@@ -37,4 +46,4 @@
 .agent-output p { margin: 0.45em 0; }
 .agent-output ul { list-style: disc; padding-left: 1.2em; margin: 0.4em 0; }
 .agent-output ol { list-style: decimal; padding-left: 1.2em; margin: 0.4em 0; }
-.agent-output strong { color: #1E40AF; }
+.agent-output strong { color: rgb(var(--c-navy)); }
