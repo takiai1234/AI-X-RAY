@@ -741,6 +741,20 @@ Gói nội dung này AI tạo trong một phút. Bước tiếp theo đáng họ
 
 export const PERSONA_LIST = Object.values(PERSONAS);
 
+// Icon cho từng nhóm (màn chọn nhóm) + nhóm nổi bật để tạo điểm rơi
+export const PERSONA_ICON: Record<string, string> = {
+  ceo: "🧑‍💼",
+  seller: "🛒",
+  office: "💼",
+  affiliate: "📈",
+  marketing: "📣",
+  sales: "🤝",
+  hr: "📋",
+  creator: "🎬",
+};
+
+export const FEATURED_PERSONA = "ceo"; // ô tô nền cam nhạt để mắt có điểm rơi
+
 // Link đăng ký thật của từng chương trình. Chưa có link riêng thì fallback về taki.vn.
 // Danh mục 4 chương trình đang mở bán (đã rút gọn theo chỉ đạo)
 export const COURSE_URLS: Record<string, string> = {

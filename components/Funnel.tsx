@@ -161,9 +161,21 @@ export default function Funnel({
 
       {step === "analyzing" && <Analyzing onDone={() => setStep("lead_gate")} />}
 
-      {step === "lead_gate" && score && (
+      {step === "lead_gate" && score && savings && answers && (
         <LeadGate
           score={score.score}
+          level={score.level}
+          levelName={score.levelName}
+          savedHours={savings.totalSavedHours}
+          personaLabel={PERSONAS[persona].label}
+          topTaskLabel={
+            PERSONAS[persona].taskLibrary.find((t) => t.id === answers.topTasks[0])
+              ?.label ?? ""
+          }
+          topTaskAiPct={
+            PERSONAS[persona].taskLibrary.find((t) => t.id === answers.topTasks[0])
+              ?.aiSupportPct ?? 80
+          }
           onSubmit={(l) => {
             setLead(l);
             setStep("report");

@@ -5,6 +5,15 @@ import { PERSONAS } from "@/lib/personas";
 import type { PersonaId } from "@/lib/types";
 import { track } from "@/lib/tracking";
 
+const AGENT_STEPS = [
+  "Đọc hồ sơ & kết quả quét của bạn",
+  "Phân tích tình huống bạn vừa nhập",
+  "Soạn nội dung & đề xuất chính",
+  "Dựng kế hoạch hành động cho bạn",
+];
+
+const fmtTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
 export interface AgentContext {
   score: number;
   level: number;
@@ -31,12 +40,26 @@ export default function AgentDemo({
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  const [doneTime, setDoneTime] = useState(0);
   const outRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startRef = useRef(0);
+
+  // Bước đang chạy suy từ thời gian trôi qua (checklist 4 bước)
+  const phase = finished ? AGENT_STEPS.length : Math.min(AGENT_STEPS.length - 1, Math.floor(elapsed / 6));
 
   const run = async () => {
     if (!input.trim() || running) return;
     setRunning(true);
     setOutput("");
+    setFinished(false);
+    setElapsed(0);
+    startRef.current = Date.now();
+    timerRef.current = setInterval(
+      () => setElapsed(Math.round((Date.now() - startRef.current) / 1000)),
+      1000,
+    );
     track("agent_demo_start", { persona });
     try {
       const res = await fetch("/api/agent", {
@@ -55,6 +78,7 @@ export default function AgentDemo({
         setOutput(acc);
         outRef.current?.scrollTo({ top: outRef.current.scrollHeight });
       }
+      setDoneTime(Math.max(1, Math.round((Date.now() - startRef.current) / 1000)));
       setFinished(true);
       track("agent_demo_complete", { persona });
     } catch {
@@ -63,6 +87,7 @@ export default function AgentDemo({
       );
       setFinished(true);
     } finally {
+      if (timerRef.current) clearInterval(timerRef.current);
       setRunning(false);
     }
   };
@@ -103,28 +128,58 @@ export default function AgentDemo({
           disabled={running}
         />
         <button
-          className="btn-cta mt-3 w-full disabled:opacity-40"
+          className={`mt-3 w-full rounded-xl px-6 py-3.5 text-base font-bold shadow-lg transition ${
+            !input.trim() || running
+              ? "cursor-not-allowed bg-slate-200 text-slate-400 shadow-none"
+              : "bg-cam text-white shadow-cam/30 hover:bg-cam-dark active:scale-[0.98]"
+          }`}
           onClick={run}
           disabled={!input.trim() || running}
         >
-          {running ? "⏳ Agent đang làm việc..." : "▶ Chạy Agent"}
+          {running ? `⏳ Đang chạy · ${fmtTime(elapsed)}` : "▶ Chạy Agent"}
         </button>
-        {running ? (
-          <p className="mt-2 text-center text-xs text-slate-400">
-            Agent đang phân tích và soạn kết quả cho bạn, thường mất 30–60 giây.
-            Nội dung sẽ hiện dần bên dưới.
-          </p>
-        ) : (
-          <p className="mt-2 text-center text-xs text-slate-400">
-            Agent sẽ tạo kết quả thật trong khoảng 30–60 giây.
-          </p>
+
+        {/* Checklist 4 bước — hiện tiến triển để đỡ sốt ruột */}
+        {(running || finished) && (
+          <div className="mt-4 space-y-2">
+            {AGENT_STEPS.map((label, i) => {
+              const done = i < phase;
+              const active = i === phase && !finished;
+              return (
+                <div key={label} className="flex items-center gap-2 text-sm">
+                  <span
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${
+                      done
+                        ? "bg-green-500 text-white"
+                        : active
+                          ? "bg-cam text-white"
+                          : "bg-slate-200 text-slate-400"
+                    }`}
+                  >
+                    {done ? "✓" : active ? "●" : ""}
+                  </span>
+                  <span className={done || active ? "font-semibold text-navy-dark" : "text-slate-400"}>
+                    {label}
+                  </span>
+                  {active && (
+                    <span className="ml-1 h-1.5 w-1.5 animate-pulse rounded-full bg-cam" />
+                  )}
+                </div>
+              );
+            })}
+            <p className="pt-1 text-xs text-slate-400">
+              {finished
+                ? `✓ Xong trong ${doneTime} giây.`
+                : "Thường mất 30–60 giây. Cứ để máy chạy, kết quả hiện ngay bên dưới."}
+            </p>
+          </div>
         )}
       </div>
 
       {output && (
         <div className="card mt-4">
           <p className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
-            Kết quả từ {p.agent.name}
+            {running ? "Kết quả đang được viết" : `Kết quả từ ${p.agent.name}`}
             {running && <span className="h-2 w-2 animate-pulse rounded-full bg-cam" />}
           </p>
           <div

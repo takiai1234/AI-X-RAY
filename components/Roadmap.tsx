@@ -23,6 +23,8 @@ export default function Roadmap({
 }) {
   const p = PERSONAS[answers.persona ?? "office"];
   const targetLevel = Math.min(10, Math.max(score.level + 3, 7));
+  const mainCourse = p.courses[0];
+  const otherCourses = p.courses.slice(1);
   const [copied, setCopied] = useState(false);
 
   const share = async () => {
@@ -110,47 +112,90 @@ export default function Roadmap({
         </ol>
       </div>
 
-      {/* Course mapping — offer khớp gap (mục 19: khóa học là giải pháp cho khoảng trống vừa chẩn đoán) */}
-      <div className="card mt-5">
+      {/* Màn cuối: 1 khoá chính nổi bật + các khoá phụ rút gọn */}
+      <div className="mt-5">
         <h3 className="text-base font-bold text-navy-dark">
-          🎓 Chương trình phù hợp để đi hết lộ trình này
+          🎓 Bước tiếp theo cho Level {score.level} của bạn
         </h3>
-        <p className="mt-1 text-sm text-slate-500">
-          Được chọn theo nhóm {p.label.toLowerCase()} và khoảng trống của bạn.
-        </p>
-        <div className="mt-4 space-y-3">
-          {p.courses.map((c, i) => (
-            <div
-              key={c.name}
-              className={`rounded-xl border-2 p-4 ${i === 0 ? "border-cam bg-cam/5" : "border-slate-200"}`}
+
+        {mainCourse && (
+          <div className="mt-3 rounded-2xl border-2 border-cam bg-cam/5 p-5">
+            <span className="inline-block rounded-full bg-cam px-3 py-1 text-[11px] font-bold uppercase text-white">
+              Khớp kết quả quét của bạn
+            </span>
+            <p className="mt-3 text-lg font-extrabold text-navy-dark">{mainCourse.name}</p>
+            <ul className="mt-2 space-y-1.5">
+              <li className="flex gap-2 text-sm text-slate-700">
+                <span className="text-cam">✓</span> {mainCourse.reason}
+              </li>
+              <li className="flex gap-2 text-sm text-slate-700">
+                <span className="text-cam">✓</span> Bao trọn các chặng trong lộ trình 30 ngày ở trên
+              </li>
+              <li className="flex gap-2 text-sm text-slate-700">
+                <span className="text-cam">✓</span> Khớp Level {score.level} và khoảng trống vừa chẩn đoán của bạn
+              </li>
+            </ul>
+            <a
+              href={offerHref(mainCourse.name)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => onOfferClickTrack(mainCourse.name)}
+              className="btn-cta mt-4 w-full !py-3"
             >
-              <div className="flex items-center justify-between gap-2">
-                <p className="font-bold text-navy-dark">{c.name}</p>
-                {i === 0 && (
-                  <span className="rounded-full bg-cam px-2.5 py-0.5 text-[10px] font-bold uppercase text-white">
-                    Phù hợp nhất
+              Nhận tư vấn lộ trình qua Zalo →
+            </a>
+            <p className="mt-2 text-center text-[11px] text-slate-400">
+              Miễn phí · tư vấn theo đúng kết quả quét · trả lời trong giờ hành chính
+            </p>
+          </div>
+        )}
+
+        {otherCourses.length > 0 && (
+          <>
+            <p className="mt-4 text-xs font-semibold text-slate-500">
+              Hai hướng khác nếu bạn muốn so sánh
+            </p>
+            <div className="mt-2 space-y-2">
+              {otherCourses.map((c) => (
+                <a
+                  key={c.name}
+                  href={offerHref(c.name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => onOfferClickTrack(c.name)}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-navy/40"
+                >
+                  <span>
+                    <span className="block text-sm font-bold text-navy-dark">{c.name}</span>
+                    <span className="block text-xs text-slate-500">{c.reason}</span>
                   </span>
-                )}
-              </div>
-              <p className="mt-1 text-sm text-slate-600">{c.reason}</p>
-              <a
-                href={offerHref(c.name)}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => onOfferClickTrack(c.name)}
-                className={i === 0 ? "btn-cta mt-3 w-full !py-2.5 text-sm" : "btn-ghost mt-3 w-full !py-2.5"}
-              >
-                Xem chương trình & nhận tư vấn lộ trình →
-              </a>
+                  <span className="shrink-0 text-sm font-semibold text-navy">Xem →</span>
+                </a>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
+
         <p className="mt-3 text-center text-[11px] text-slate-400">
-          Tư vấn miễn phí theo đúng kết quả quét của bạn. Kết quả học tập phụ
-          thuộc vào hành động của người học, chúng tôi không cam kết mức thu
-          nhập cụ thể.
+          Kết quả học tập phụ thuộc vào hành động của người học, chúng tôi không
+          cam kết mức thu nhập cụ thể.
         </p>
       </div>
+
+      {/* CTA ghim đáy khi cuộn */}
+      {mainCourse && (
+        <div className="sticky bottom-4 z-10 mt-6">
+          <a
+            href={offerHref(mainCourse.name)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => onOfferClickTrack(mainCourse.name)}
+            className="btn-cta w-full !py-3"
+          >
+            Nhận tư vấn lộ trình qua Zalo →
+          </a>
+        </div>
+      )}
 
       <p className="mt-5 text-center text-[11px] text-slate-400">
         * Các con số là ước tính cơ hội dựa trên khai báo, không phải cam kết.

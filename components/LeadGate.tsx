@@ -3,18 +3,35 @@
 import { useState } from "react";
 import type { Lead } from "@/lib/types";
 
-// Lead capture trước khi mở full report (mục 12: Lead Capture trước AI Score + Report)
+// Màn xin thông tin (mục 12): cho khách một phát hiện thật + gauge điểm + danh
+// sách phần thưởng đang khoá (ghi rõ tên) trước khi đòi thông tin.
 export default function LeadGate({
   score,
+  level,
+  levelName,
+  savedHours,
+  personaLabel,
+  topTaskLabel,
+  topTaskAiPct,
   onSubmit,
 }: {
   score: number;
+  level: number;
+  levelName: string;
+  savedHours: number;
+  personaLabel: string;
+  topTaskLabel: string;
+  topTaskAiPct: number;
   onSubmit: (lead: Lead) => void;
 }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [showEmail, setShowEmail] = useState(false);
   const [err, setErr] = useState("");
+
+  // % "cao hơn ... người cùng nhóm" suy từ điểm (ước lượng minh họa)
+  const comparePct = Math.min(92, Math.max(8, Math.round(score * 0.88)));
 
   const submit = () => {
     if (!name.trim()) {
@@ -22,7 +39,7 @@ export default function LeadGate({
       return;
     }
     if (!phone.trim() && !email.trim()) {
-      setErr("Nhập ít nhất SĐT/Zalo hoặc email để nhận báo cáo");
+      setErr("Nhập SĐT/Zalo để nhận lộ trình");
       return;
     }
     if (phone && !/^0\d{8,10}$/.test(phone.replace(/[\s.]/g, ""))) {
@@ -36,64 +53,120 @@ export default function LeadGate({
     onSubmit({ name, phone, email, channel: phone ? "zalo" : "email" });
   };
 
+  // Gauge nửa vòng
+  const R = 60;
+  const CX = 70;
+  const CY = 70;
+  const len = Math.PI * R;
+  const offset = len * (1 - score / 100);
+
   return (
-    <div className="mx-auto max-w-md px-4 pb-16 pt-10">
-      {/* Preview bị che một phần để tăng động lực (mục 22.2) */}
-      <div className="card relative overflow-hidden text-center">
+    <div className="mx-auto max-w-md px-4 pb-16 pt-8">
+      <div className="card text-center">
         <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
           Kết quả quét của bạn
         </p>
-        <p className="mt-2 text-5xl font-extrabold text-navy">
-          {score}
-          <span className="text-2xl text-slate-400">/100</span>
-        </p>
-        <p className="mt-1 text-sm font-semibold text-cam">AI READINESS SCORE</p>
-        <div className="mt-4 space-y-2 blur-sm select-none" aria-hidden>
-          <div className="h-3 rounded bg-slate-200" />
-          <div className="h-3 w-4/5 rounded bg-slate-200" />
-          <div className="h-3 w-3/5 rounded bg-slate-200" />
-          <div className="h-16 rounded bg-slate-100" />
+
+        {/* Gauge nửa vòng có mốc */}
+        <div className="mx-auto mt-2 w-[140px]">
+          <svg viewBox="0 0 140 80" className="w-full">
+            <path
+              d="M 10 70 A 60 60 0 0 1 130 70"
+              fill="none"
+              stroke="#E2E8F0"
+              strokeWidth="12"
+              strokeLinecap="round"
+            />
+            <path
+              d="M 10 70 A 60 60 0 0 1 130 70"
+              fill="none"
+              stroke="#F97316"
+              strokeWidth="12"
+              strokeLinecap="round"
+              strokeDasharray={len}
+              strokeDashoffset={offset}
+            />
+            <text x={CX} y={CY - 8} textAnchor="middle" className="fill-navy" fontSize="30" fontWeight="800">
+              {score}
+            </text>
+            <text x={CX} y={CY + 8} textAnchor="middle" className="fill-slate-400" fontSize="11">
+              /100
+            </text>
+          </svg>
         </div>
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white to-transparent" />
+        <p className="mt-1 text-lg font-bold text-navy-dark">
+          Level {level}/10 — {levelName}
+        </p>
+        <p className="text-xs text-slate-500">
+          Cao hơn {comparePct}% {personaLabel} cùng quy mô đã quét (ước tính)
+        </p>
+
+        {/* Cho không 1 phát hiện thật */}
+        {topTaskLabel && (
+          <div className="mt-4 rounded-xl bg-navy/5 p-3 text-left text-sm text-slate-700">
+            <span className="font-bold text-navy">✓ Xem trước:</span> việc tốn giờ
+            nhất của bạn là <b>{topTaskLabel.toLowerCase()}</b> — AI gánh được
+            khoảng <b className="text-cam-dark">{topTaskAiPct}%</b>.
+          </div>
+        )}
+
+        {/* Danh sách phần thưởng đang khoá, ghi rõ tên */}
+        <div className="mt-3 space-y-2 text-left text-sm">
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            Trong báo cáo đầy đủ còn có
+          </p>
+          {[
+            "Bảng 3 nhóm việc AI hóa được, kèm số giờ",
+            "Chi phí cơ hội quy ra tiền mỗi tháng",
+            "1 AI Agent tạo sẵn, chạy thử ngay",
+            "Lộ trình 30 ngày chia theo tuần",
+          ].map((t) => (
+            <div key={t} className="flex items-center gap-2 text-slate-600">
+              <span>🔒</span> {t}
+            </div>
+          ))}
+        </div>
       </div>
 
-      <h2 className="mt-6 text-center text-xl font-bold text-navy-dark">
-        Nhận báo cáo đầy đủ + lộ trình AI 30 ngày
-      </h2>
-      <p className="mt-1 text-center text-sm text-slate-500">
-        Báo cáo gồm: bản đồ cơ hội AI hóa, số giờ có thể tối ưu, AI Agent chạy
-        thử và lộ trình học cá nhân hóa.
-      </p>
-
+      {/* Form gọn: tên + SĐT bắt buộc, email là tùy chọn ẩn */}
       <div className="mt-5 flex flex-col gap-3">
         <input
           className="rounded-xl border-2 border-slate-200 px-4 py-3 text-sm outline-none focus:border-navy"
-          placeholder="Tên của bạn *"
+          placeholder="Tên của bạn"
           aria-label="Tên của bạn (bắt buộc)"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <input
           className="rounded-xl border-2 border-slate-200 px-4 py-3 text-sm outline-none focus:border-navy"
-          placeholder="SĐT / Zalo (nhận lộ trình qua Zalo)"
+          placeholder="Số Zalo để nhận lộ trình"
           inputMode="tel"
+          aria-label="Số điện thoại / Zalo (bắt buộc)"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-        <input
-          className="rounded-xl border-2 border-slate-200 px-4 py-3 text-sm outline-none focus:border-navy"
-          placeholder="Email (tùy chọn)"
-          inputMode="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        {showEmail ? (
+          <input
+            className="rounded-xl border-2 border-slate-200 px-4 py-3 text-sm outline-none focus:border-navy"
+            placeholder="Email (tùy chọn)"
+            inputMode="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        ) : (
+          <button
+            className="self-start text-xs font-semibold text-navy underline"
+            onClick={() => setShowEmail(true)}
+          >
+            + Thêm email (tùy chọn)
+          </button>
+        )}
         {err && <p className="text-sm font-medium text-red-600">{err}</p>}
         <button className="btn-cta w-full" onClick={submit}>
-          🔓 Mở báo cáo đầy đủ
+          🔓 Xem báo cáo {savedHours} giờ/tháng của tôi →
         </button>
         <p className="text-center text-xs text-slate-400">
-          Bấm để mở báo cáo đầy đủ ngay. Thông tin của bạn được đội ngũ TAKI dùng
-          để tư vấn lộ trình phù hợp.
+          🔒 Không gọi làm phiền · 350.000 học viên đã quét
         </p>
       </div>
     </div>

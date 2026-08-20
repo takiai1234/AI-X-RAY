@@ -118,23 +118,27 @@ export default function Assessment({
         ? [...answers.topTasks, v]
         : answers.topTasks;
 
+  const timeLeft = step >= steps - 2 ? "sắp xong" : "còn ~1 phút";
+
   return (
-    <div className="mx-auto max-w-xl px-4 pb-16 pt-8">
-      {/* Progress */}
+    <div className="mx-auto max-w-xl px-4 pb-28 pt-8">
+      {/* Progress: thanh chia đoạn theo số câu + còn bao lâu */}
       <div className="mb-6">
         <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
           <button onClick={goBack} className="hover:text-navy">
-            ← Quay lại
+            ← Câu trước
           </button>
           <span>
-            Câu {step + 1}/{steps} · {p.label}
+            Câu {step + 1}/{steps} · {timeLeft}
           </span>
         </div>
-        <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
-          <div
-            className="progress-bar h-full rounded-full bg-cam"
-            style={{ width: `${((step + 1) / steps) * 100}%` }}
-          />
+        <div className="mt-2 flex gap-1.5">
+          {Array.from({ length: steps }).map((_, i) => (
+            <div
+              key={i}
+              className={`h-1.5 flex-1 rounded-full transition ${i <= step ? "bg-cam" : "bg-slate-200"}`}
+            />
+          ))}
         </div>
       </div>
 
@@ -148,28 +152,30 @@ export default function Assessment({
             const active = answers.topTasks.includes(t.id);
             const full = answers.topTasks.length >= 3 && !active;
             return (
-              <button
+              <ChoiceButton
                 key={t.id}
-                className={`chip w-full ${active ? "chip-active" : ""} ${full ? "opacity-50" : ""}`}
+                label={t.label}
+                multi
+                active={active}
+                disabled={full}
                 onClick={() => setAnswers({ ...answers, topTasks: toggleTask(t.id) })}
-              >
-                {t.label}
-              </button>
+              />
             );
           })}
-          {/* F-13: báo khi chạm giới hạn 3 */}
           {answers.topTasks.length >= 3 && (
             <p className="text-xs font-medium text-cam-dark">
               Đã chọn đủ 3/3 — bỏ bớt một việc nếu muốn đổi.
             </p>
           )}
-          <button
-            className="btn-cta mt-3 w-full disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none"
+          <StickyContinue
             disabled={answers.topTasks.length === 0}
+            label={
+              answers.topTasks.length === 0
+                ? "Chọn ít nhất 1 việc để tiếp tục"
+                : "Tiếp tục →"
+            }
             onClick={() => next({})}
-          >
-            {answers.topTasks.length === 0 ? "Chọn ít nhất 1 việc để tiếp tục" : "Tiếp tục →"}
-          </button>
+          />
         </StepBox>
       )}
 
@@ -177,7 +183,7 @@ export default function Assessment({
       {step === 1 && (
         <StepBox title="Mỗi tuần bạn mất khoảng bao nhiêu giờ cho các việc lặp lại?">
           {HOUR_OPTIONS.map((o) => (
-            <OptionButton
+            <ChoiceButton
               key={o.value}
               label={o.label}
               desc={o.desc}
@@ -192,7 +198,7 @@ export default function Assessment({
       {step === 2 && (
         <StepBox title="Bạn đang sử dụng AI ở mức nào?">
           {USAGE_OPTIONS.map((o) => (
-            <OptionButton
+            <ChoiceButton
               key={o.value}
               label={o.label}
               desc={o.desc}
@@ -208,13 +214,12 @@ export default function Assessment({
         <StepBox title={p.scaleQuestion.label}>
           <div className="flex flex-col gap-2">
             {p.scaleQuestion.options.map((o) => (
-              <button
+              <ChoiceButton
                 key={o}
-                className={`chip w-full ${answers.scale === o ? "chip-active" : ""}`}
+                label={o}
+                active={answers.scale === o}
                 onClick={() => setAnswers({ ...answers, scale: o })}
-              >
-                {o}
-              </button>
+              />
             ))}
           </div>
 
@@ -228,7 +233,7 @@ export default function Assessment({
           </p>
           <div className="mt-2 flex flex-col gap-2">
             {rateOptions.map((o) => (
-              <OptionButton
+              <ChoiceButton
                 key={o.value}
                 label={o.label}
                 desc={o.desc}
@@ -237,13 +242,11 @@ export default function Assessment({
               />
             ))}
           </div>
-          <button
-            className="btn-cta mt-4 w-full disabled:opacity-40"
+          <StickyContinue
             disabled={!answers.scale || !answers.hourlyRateSelf}
+            label={!answers.scale || !answers.hourlyRateSelf ? "Chọn cả hai để tiếp tục" : "Tiếp tục →"}
             onClick={() => next({})}
-          >
-            Tiếp tục →
-          </button>
+          />
         </StepBox>
       )}
 
@@ -251,20 +254,19 @@ export default function Assessment({
       {step === 4 && (
         <StepBox title="Bạn muốn AI giúp giải quyết vấn đề nào nhất ngay bây giờ?">
           {p.painPoints.map((o) => (
-            <button
+            <ChoiceButton
               key={o}
-              className={`chip w-full ${answers.painPoint === o ? "chip-active" : ""}`}
+              label={o}
+              active={answers.painPoint === o}
               onClick={() => setAnswers({ ...answers, painPoint: o })}
-            >
-              {o}
-            </button>
+            />
           ))}
           <p className="mt-5 text-sm font-bold text-navy-dark">
             Bạn có sẵn sàng kết nối các công cụ để tự động hóa quy trình không?
           </p>
           <div className="mt-2 flex flex-col gap-2">
             {AUTO_OPTIONS.map((o) => (
-              <OptionButton
+              <ChoiceButton
                 key={o.value}
                 label={o.label}
                 desc={o.desc}
@@ -273,35 +275,90 @@ export default function Assessment({
               />
             ))}
           </div>
-          <button
-            className="btn-cta mt-4 w-full disabled:opacity-40"
+          <StickyContinue
             disabled={!answers.painPoint || !answers.automationReady}
+            label={!answers.painPoint || !answers.automationReady ? "Chọn cả hai để xem kết quả" : "Xem kết quả quét →"}
             onClick={() => next({})}
-          >
-            Xem kết quả quét →
-          </button>
+          />
         </StepBox>
       )}
     </div>
   );
 }
 
-function OptionButton({
+// Nút chọn: ô tick bên trái (vuông cho chọn-nhiều, tròn cho chọn-một),
+// khi chọn = viền cam + nền cam nhạt + ô tick cam đặc + chữ đậm (4 tín hiệu).
+function ChoiceButton({
   label,
   desc,
   active,
+  multi,
+  disabled,
   onClick,
 }: {
   label: string;
-  desc: string;
+  desc?: string;
   active?: boolean;
+  multi?: boolean;
+  disabled?: boolean;
   onClick: () => void;
 }) {
   return (
-    <button className={`chip w-full ${active ? "chip-active" : ""}`} onClick={onClick}>
-      <span className="block font-semibold">{label}</span>
-      <span className="mt-0.5 block text-xs font-normal text-slate-400">{desc}</span>
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`flex w-full items-start gap-3 rounded-xl border-2 px-4 py-3 text-left transition ${
+        active
+          ? "border-cam bg-cam/5"
+          : "border-slate-200 bg-white hover:border-navy/40"
+      } ${disabled ? "opacity-45" : ""}`}
+    >
+      <span
+        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border-2 text-[11px] font-bold ${
+          multi ? "rounded-md" : "rounded-full"
+        } ${active ? "border-cam bg-cam text-white" : "border-slate-300 text-transparent"}`}
+      >
+        ✓
+      </span>
+      <span className="min-w-0">
+        <span
+          className={`block text-base leading-snug text-navy-dark ${active ? "font-extrabold" : "font-semibold"}`}
+        >
+          {label}
+        </span>
+        {desc && (
+          <span className="mt-0.5 block text-xs font-normal text-slate-400">{desc}</span>
+        )}
+      </span>
     </button>
+  );
+}
+
+// Nút Tiếp tục ghim đáy màn hình (mobile không phải cuộn tìm).
+// Khi khoá: chuyển XÁM hẳn, không giữ màu cam mờ.
+function StickyContinue({
+  disabled,
+  label,
+  onClick,
+}: {
+  disabled?: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <div className="sticky bottom-4 z-10 mt-4">
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        className={`w-full rounded-xl px-6 py-3.5 text-base font-bold shadow-lg transition ${
+          disabled
+            ? "cursor-not-allowed bg-slate-200 text-slate-400 shadow-none"
+            : "bg-cam text-white shadow-cam/30 hover:bg-cam-dark active:scale-[0.98]"
+        }`}
+      >
+        {label}
+      </button>
+    </div>
   );
 }
 
