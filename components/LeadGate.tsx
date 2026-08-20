@@ -27,7 +27,6 @@ export default function LeadGate({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [showEmail, setShowEmail] = useState(false);
   const [err, setErr] = useState("");
 
   // % "cao hơn ... người cùng nhóm" suy từ điểm (ước lượng minh họa)
@@ -145,22 +144,14 @@ export default function LeadGate({
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-        {showEmail ? (
-          <input
-            className="rounded-xl border-2 border-slate-200 px-4 py-3 text-sm outline-none focus:border-navy"
-            placeholder="Email (tùy chọn)"
-            inputMode="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        ) : (
-          <button
-            className="self-start text-xs font-semibold text-navy underline"
-            onClick={() => setShowEmail(true)}
-          >
-            + Thêm email (tùy chọn)
-          </button>
-        )}
+        <input
+          className="rounded-xl border-2 border-slate-200 px-4 py-3 text-sm outline-none focus:border-navy"
+          placeholder="Email để nhận báo cáo & lộ trình (tùy chọn)"
+          inputMode="email"
+          aria-label="Email (tùy chọn)"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         {err && <p className="text-sm font-medium text-red-600">{err}</p>}
         <button className="btn-cta w-full" onClick={submit}>
           🔓 Xem báo cáo {savedHours} giờ/tháng của tôi →
