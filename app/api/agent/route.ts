@@ -119,6 +119,48 @@ async function callNineRouter(
     async start(controller) {
       let buffer = "";
       let sentAny = false;
+
+      // Lọc bỏ khối <think>...</think> mà một số model đẩy ra đầu stream.
+      // Giữ lại đuôi ngắn trong pending để không cắt đôi thẻ giữa 2 chunk.
+      let pending = "";
+      let inThink = false;
+      const emitFiltered = (text: string, flush = false) => {
+        pending += text;
+        let out = "";
+        for (;;) {
+          if (inThink) {
+            const close = pending.indexOf("</think>");
+            if (close === -1) {
+              pending = pending.slice(-8); // giữ đuôi phòng thẻ bị cắt đôi
+              break;
+            }
+            pending = pending.slice(close + 8);
+            inThink = false;
+          } else {
+            const open = pending.indexOf("<think>");
+            if (open === -1) {
+              const keep = flush ? 0 : 7;
+              out += pending.slice(0, pending.length - keep || undefined);
+              pending = keep ? pending.slice(-keep) : "";
+              if (flush && pending) {
+                out += pending;
+                pending = "";
+              }
+              break;
+            }
+            out += pending.slice(0, open);
+            pending = pending.slice(open + 7);
+            inThink = true;
+          }
+        }
+        // Bỏ khoảng trắng thừa ở đầu output (sau khi cắt think block)
+        if (!sentAny) out = out.replace(/^\s+/, "");
+        if (out) {
+          sentAny = true;
+          controller.enqueue(encoder.encode(out));
+        }
+      };
+
       try {
         for (;;) {
           const { done, value } = await reader.read();
@@ -135,15 +177,13 @@ async function callNineRouter(
               const json = JSON.parse(payload);
               const delta: string | undefined =
                 json.choices?.[0]?.delta?.content;
-              if (delta) {
-                sentAny = true;
-                controller.enqueue(encoder.encode(delta));
-              }
+              if (delta) emitFiltered(delta);
             } catch {
               /* bỏ chunk hỏng */
             }
           }
         }
+        emitFiltered("", true); // xả phần còn giữ lại
         if (!sentAny) {
           controller.enqueue(encoder.encode(fallbackText));
         }

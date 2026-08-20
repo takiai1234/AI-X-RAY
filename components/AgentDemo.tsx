@@ -67,10 +67,11 @@ export default function AgentDemo({
     }
   };
 
-  // Render markdown đơn giản: **bold** và xuống dòng
+  // Render markdown đơn giản: heading #, **bold** và xuống dòng
   const html = output
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
+    .replace(/^#{1,4}\s+(.+)$/gm, "<strong>$1</strong>")
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\n/g, "<br/>");
 
