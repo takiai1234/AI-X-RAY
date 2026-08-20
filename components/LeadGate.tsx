@@ -17,6 +17,10 @@ export default function LeadGate({
   const [err, setErr] = useState("");
 
   const submit = () => {
+    if (!name.trim()) {
+      setErr("Nhập tên của bạn để nhận báo cáo cá nhân hóa");
+      return;
+    }
     if (!phone.trim() && !email.trim()) {
       setErr("Nhập ít nhất SĐT/Zalo hoặc email để nhận báo cáo");
       return;
@@ -64,7 +68,8 @@ export default function LeadGate({
       <div className="mt-5 flex flex-col gap-3">
         <input
           className="rounded-xl border-2 border-slate-200 px-4 py-3 text-sm outline-none focus:border-navy"
-          placeholder="Tên của bạn"
+          placeholder="Tên của bạn *"
+          aria-label="Tên của bạn (bắt buộc)"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -87,7 +92,8 @@ export default function LeadGate({
           🔓 Mở báo cáo đầy đủ
         </button>
         <p className="text-center text-xs text-slate-400">
-          Thông tin chỉ dùng để gửi báo cáo và lộ trình của bạn.
+          Bấm để mở báo cáo đầy đủ ngay. Thông tin của bạn được đội ngũ TAKI dùng
+          để tư vấn lộ trình phù hợp.
         </p>
       </div>
     </div>

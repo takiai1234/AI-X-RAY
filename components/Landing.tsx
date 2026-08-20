@@ -73,6 +73,7 @@ export default function Landing({
             <button
               key={p.id}
               onClick={() => onStart(p.id)}
+              aria-label={`Chọn nhóm ${p.label} và bắt đầu quét`}
               className="chip flex min-h-[76px] flex-col items-center justify-center gap-1 text-center hover:shadow-md"
             >
               <span className="text-sm font-bold text-navy-dark">{p.label}</span>

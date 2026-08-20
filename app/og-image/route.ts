@@ -11,7 +11,9 @@ export async function GET() {
   return new Response(new Uint8Array(img.buf), {
     headers: {
       "Content-Type": img.meta.contentType,
-      "Cache-Control": "public, max-age=3600",
+      // Cache dài + immutable: URL đã có ?v=<updatedAt> ổn định nên đổi ảnh mới
+      // sinh URL mới, crawler không cần quét lại ảnh cũ (F-10)
+      "Cache-Control": "public, max-age=604800, immutable",
       "Content-Length": String(img.meta.size),
     },
   });

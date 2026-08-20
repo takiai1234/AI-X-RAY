@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PERSONAS } from "@/lib/personas";
 import type { AssessmentAnswers, AiUsageLevel, PersonaId } from "@/lib/types";
 import { track } from "@/lib/tracking";
@@ -67,7 +67,8 @@ export default function Assessment({
     goal: "",
     topTasks: [],
     repetitiveHoursPerWeek: 0,
-    aiUsageLevel: "chua_dung",
+    // "" = chưa trả lời (để không highlight nhầm khi quay lại — F-04)
+    aiUsageLevel: "" as AiUsageLevel,
     aiTools: [],
     scale: "",
     hourlyRateSelf: 0,
@@ -76,6 +77,21 @@ export default function Assessment({
   });
 
   const steps = 5;
+
+  // F-03: mỗi câu là một entry lịch sử → nút Back trình duyệt / vuốt-lùi trên
+  // mobile lùi một câu thay vì thoát khỏi site.
+  useEffect(() => {
+    window.history.replaceState({ aixrayQ: 0 }, "");
+    const onPop = (e: PopStateEvent) => {
+      const q = (e.state as { aixrayQ?: number } | null)?.aixrayQ;
+      if (typeof q === "number") setStep(q);
+      else onBack(); // hết entry của bài quét → về landing
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const next = (patch: Partial<AssessmentAnswers>) => {
     const merged = { ...answers, ...patch };
     setAnswers(merged);
@@ -85,7 +101,14 @@ export default function Assessment({
       onComplete(merged);
     } else {
       setStep(nextStep);
+      window.history.pushState({ aixrayQ: nextStep }, "");
     }
+  };
+
+  // Lùi bằng history để đồng bộ với nút Back trình duyệt
+  const goBack = () => {
+    if (step === 0) onBack();
+    else window.history.back();
   };
 
   const toggleTask = (v: string) =>
@@ -100,7 +123,7 @@ export default function Assessment({
       {/* Progress */}
       <div className="mb-6">
         <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
-          <button onClick={step === 0 ? onBack : () => setStep(step - 1)} className="hover:text-navy">
+          <button onClick={goBack} className="hover:text-navy">
             ← Quay lại
           </button>
           <span>
@@ -119,23 +142,33 @@ export default function Assessment({
       {step === 0 && (
         <StepBox
           title="Bạn đang dành nhiều thời gian nhất cho những việc nào?"
-          subtitle="Chọn tối đa 3 việc, ưu tiên việc tốn giờ nhất"
+          subtitle={`Chọn tối đa 3 việc, ưu tiên việc tốn giờ nhất · đã chọn ${answers.topTasks.length}/3`}
         >
-          {p.taskLibrary.map((t) => (
-            <button
-              key={t.id}
-              className={`chip w-full ${answers.topTasks.includes(t.id) ? "chip-active" : ""}`}
-              onClick={() => setAnswers({ ...answers, topTasks: toggleTask(t.id) })}
-            >
-              {t.label}
-            </button>
-          ))}
+          {p.taskLibrary.map((t) => {
+            const active = answers.topTasks.includes(t.id);
+            const full = answers.topTasks.length >= 3 && !active;
+            return (
+              <button
+                key={t.id}
+                className={`chip w-full ${active ? "chip-active" : ""} ${full ? "opacity-50" : ""}`}
+                onClick={() => setAnswers({ ...answers, topTasks: toggleTask(t.id) })}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+          {/* F-13: báo khi chạm giới hạn 3 */}
+          {answers.topTasks.length >= 3 && (
+            <p className="text-xs font-medium text-cam-dark">
+              Đã chọn đủ 3/3 — bỏ bớt một việc nếu muốn đổi.
+            </p>
+          )}
           <button
-            className="btn-cta mt-3 w-full disabled:opacity-40"
+            className="btn-cta mt-3 w-full disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none"
             disabled={answers.topTasks.length === 0}
             onClick={() => next({})}
           >
-            Tiếp tục →
+            {answers.topTasks.length === 0 ? "Chọn ít nhất 1 việc để tiếp tục" : "Tiếp tục →"}
           </button>
         </StepBox>
       )}
@@ -148,6 +181,7 @@ export default function Assessment({
               key={o.value}
               label={o.label}
               desc={o.desc}
+              active={answers.repetitiveHoursPerWeek === o.value}
               onClick={() => next({ repetitiveHoursPerWeek: o.value })}
             />
           ))}
@@ -162,6 +196,7 @@ export default function Assessment({
               key={o.value}
               label={o.label}
               desc={o.desc}
+              active={answers.aiUsageLevel === o.value}
               onClick={() => next({ aiUsageLevel: o.value })}
             />
           ))}

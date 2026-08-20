@@ -109,6 +109,16 @@ export default function AgentDemo({
         >
           {running ? "⏳ Agent đang làm việc..." : "▶ Chạy Agent"}
         </button>
+        {running ? (
+          <p className="mt-2 text-center text-xs text-slate-400">
+            Agent đang phân tích và soạn kết quả cho bạn, thường mất 30–60 giây.
+            Nội dung sẽ hiện dần bên dưới.
+          </p>
+        ) : (
+          <p className="mt-2 text-center text-xs text-slate-400">
+            Agent sẽ tạo kết quả thật trong khoảng 30–60 giây.
+          </p>
+        )}
       </div>
 
       {output && (

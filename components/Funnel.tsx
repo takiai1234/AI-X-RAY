@@ -36,10 +36,48 @@ export default function Funnel({
   const [answers, setAnswers] = useState<AssessmentAnswers | null>(null);
   const [lead, setLead] = useState<Lead | null>(null);
   const behavior = useRef({ demoDone: false, roadmapViewed: false, offerClicked: false });
+  const restored = useRef(false);
 
+  // F-02: khôi phục tiến độ khi F5 / mở lại tab
+  const storageKey = `aixray_progress_${personaLock ?? "home"}`;
   useEffect(() => {
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s.answers) setAnswers(s.answers);
+        if (s.lead) setLead(s.lead);
+        if (s.behavior) behavior.current = s.behavior;
+        if (s.persona) setPersona(s.persona);
+        // Bỏ qua màn "analyzing" (chỉ là animation), nhảy tới lead_gate
+        const restoreStep: FunnelStep =
+          s.step === "analyzing" ? "lead_gate" : s.step;
+        if (restoreStep && restoreStep !== "landing") setStep(restoreStep);
+      }
+    } catch {
+      /* localStorage lỗi thì bỏ qua */
+    }
+    restored.current = true;
     track("landing_view", personaLock ? { persona: personaLock } : {});
-  }, [personaLock]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Lưu tiến độ mỗi khi đổi
+  useEffect(() => {
+    if (!restored.current) return;
+    try {
+      if (step === "landing") {
+        localStorage.removeItem(storageKey);
+      } else {
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify({ step, persona, answers, lead, behavior: behavior.current }),
+        );
+      }
+    } catch {
+      /* bỏ qua */
+    }
+  }, [step, persona, answers, lead, storageKey]);
 
   const score = useMemo(() => (answers ? computeScore(answers) : null), [answers]);
   const savings = useMemo(

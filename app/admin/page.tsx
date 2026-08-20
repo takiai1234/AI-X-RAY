@@ -447,7 +447,7 @@ export default function AdminPage() {
           </Field>
           <Field
             label="Ảnh hiển thị khi share link (og:image)"
-            hint="Kích thước chuẩn 1200×630px, PNG/JPG/WebP, tối đa 3MB. Hiện khi share link lên Facebook, Zalo, TikTok, Messenger. Áp dụng cho cả trang chủ lẫn các landing /ceo, /seller..."
+            hint="Kích thước chuẩn 1200×630px, PNG/JPG/WebP. Nên nén dưới 300KB để Facebook/Zalo quét nhanh và không hiện thiếu ảnh. Hiện khi share link lên Facebook, Zalo, TikTok, Messenger; áp dụng cho cả trang chủ lẫn landing /ceo, /seller..."
           >
             <div className="flex flex-col gap-3">
               {ogVersion ? (

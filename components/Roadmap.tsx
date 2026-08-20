@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { PERSONAS, courseUrl } from "@/lib/personas";
 import type { AssessmentAnswers, ScoreResult, SavingsResult } from "@/lib/types";
-import { track } from "@/lib/tracking";
+import { track, getSessionId } from "@/lib/tracking";
 
 // Personalized AI Learning Roadmap (mục 11) + mapping khóa học + share card (mục 16)
 export default function Roadmap({
@@ -28,7 +28,8 @@ export default function Roadmap({
   const share = async () => {
     track("share_click", { persona: answers.persona, score: score.score });
     const text = `AI Score của tôi: ${score.score}/100 (Level ${score.level} - ${score.levelName}). AI có thể hỗ trợ ${savings.aiSupportPct}% khối lượng công việc của tôi. Bạn thử quét xem: `;
-    const url = window.location.origin;
+    // F-06: gắn nguồn để đo vòng lan truyền — share này đẻ ra bao nhiêu lượt quét
+    const url = `${window.location.origin}/?ref=${getSessionId()}&utm_source=share&utm_medium=referral`;
     if (navigator.share) {
       try {
         await navigator.share({ title: "AI X-RAY", text, url });
@@ -42,10 +43,14 @@ export default function Roadmap({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const openOffer = (courseName: string) => {
+  const offerHref = (courseName: string) =>
+    courseUrls?.[courseName] || courseUrl(courseName);
+
+  // F-05: dùng thẻ <a> thật (giữ event tracking bằng onClick) để không bị
+  // chặn popup trong webview Zalo/Facebook — đây là nút ra tiền.
+  const onOfferClickTrack = (courseName: string) => {
     track("offer_click", { course: courseName, persona: answers.persona });
     onOfferClick();
-    window.open(courseUrls?.[courseName] || courseUrl(courseName), "_blank");
   };
 
   return (
@@ -128,12 +133,15 @@ export default function Roadmap({
                 )}
               </div>
               <p className="mt-1 text-sm text-slate-600">{c.reason}</p>
-              <button
-                onClick={() => openOffer(c.name)}
+              <a
+                href={offerHref(c.name)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => onOfferClickTrack(c.name)}
                 className={i === 0 ? "btn-cta mt-3 w-full !py-2.5 text-sm" : "btn-ghost mt-3 w-full !py-2.5"}
               >
                 Xem chương trình & nhận tư vấn lộ trình →
-              </button>
+              </a>
             </div>
           ))}
         </div>
