@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Funnel from "@/components/Funnel";
 import { PERSONAS } from "@/lib/personas";
+import { getSettings, toPublic } from "@/lib/settings";
 import type { PersonaId } from "@/lib/types";
 
 // Landing riêng theo persona: /ceo, /seller, /office, /affiliate, /marketing, /sales, /hr, /creator
@@ -18,12 +19,6 @@ const SUB_BRAND_TITLE: Record<string, string> = {
   creator: "AI X-RAY Creator",
 };
 
-export function generateStaticParams() {
-  return Object.keys(PERSONAS).map((persona) => ({ persona }));
-}
-
-export const dynamicParams = false;
-
 export async function generateMetadata({
   params,
 }: {
@@ -32,7 +27,9 @@ export async function generateMetadata({
   const { persona } = await params;
   const p = PERSONAS[persona];
   if (!p) return {};
-  const title = `${SUB_BRAND_TITLE[persona]} | ${p.hook}`;
+  const settings = await getSettings();
+  const hook = settings.personaHooks[persona] || p.hook;
+  const title = `${SUB_BRAND_TITLE[persona]} | ${hook}`;
   const description = `Dành riêng cho ${p.label}: quét công việc trong 2 phút, nhận AI Score, số giờ có thể tối ưu và lộ trình AI 30 ngày cá nhân hóa. Miễn phí.`;
   return {
     title,
@@ -48,5 +45,8 @@ export default async function PersonaPage({
 }) {
   const { persona } = await params;
   if (!PERSONAS[persona]) notFound();
-  return <Funnel personaLock={persona as PersonaId} />;
+  const settings = await getSettings();
+  return (
+    <Funnel personaLock={persona as PersonaId} settings={toPublic(settings)} />
+  );
 }

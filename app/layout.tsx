@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import Pixels from "@/components/Pixels";
+import { getSettings } from "@/lib/settings";
+
+// Render động để nội dung/pixel chỉnh từ /admin áp dụng ngay, không cần build lại
+export const dynamic = "force-dynamic";
 
 const montserrat = Montserrat({
   subsets: ["latin", "vietnamese"],
@@ -19,13 +24,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const settings = await getSettings();
   return (
     <html lang="vi">
       <body className={`${montserrat.className} bg-nen text-navy-dark antialiased`}>
         {children}
+        <Pixels {...settings.pixels} />
       </body>
     </html>
   );

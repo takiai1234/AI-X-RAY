@@ -11,12 +11,25 @@ import AgentDemo from "@/components/AgentDemo";
 import Roadmap from "@/components/Roadmap";
 import { computeScore, computeSavings, computeLeadScore } from "@/lib/scoring";
 import { track, getSessionId } from "@/lib/tracking";
-import type { AssessmentAnswers, FunnelStep, Lead, PersonaId } from "@/lib/types";
+import type {
+  AssessmentAnswers,
+  FunnelStep,
+  Lead,
+  PersonaId,
+  PublicSettings,
+} from "@/lib/types";
 
 // Customer Journey 10 bước (mục 6):
 // landing → assessment → analyzing → lead_gate → report → agent_demo → roadmap
 // personaLock: dùng cho landing riêng theo tệp (/ceo, /seller...) — bỏ bước chọn nhóm.
-export default function Funnel({ personaLock }: { personaLock?: PersonaId }) {
+// settings: nội dung chỉnh từ /admin (hero, hook, link khóa, đơn giá giờ).
+export default function Funnel({
+  personaLock,
+  settings,
+}: {
+  personaLock?: PersonaId;
+  settings: PublicSettings;
+}) {
   const [step, setStep] = useState<FunnelStep>("landing");
   const [persona, setPersona] = useState<PersonaId>(personaLock ?? "office");
   const [answers, setAnswers] = useState<AssessmentAnswers | null>(null);
@@ -28,7 +41,10 @@ export default function Funnel({ personaLock }: { personaLock?: PersonaId }) {
   }, [personaLock]);
 
   const score = useMemo(() => (answers ? computeScore(answers) : null), [answers]);
-  const savings = useMemo(() => (answers ? computeSavings(answers) : null), [answers]);
+  const savings = useMemo(
+    () => (answers ? computeSavings(answers, settings.hourlyRate) : null),
+    [answers, settings.hourlyRate],
+  );
 
   const buildLeadPayload = (
     l: Lead,
@@ -73,9 +89,17 @@ export default function Funnel({ personaLock }: { personaLock?: PersonaId }) {
     <main className="min-h-screen">
       {step === "landing" &&
         (personaLock ? (
-          <PersonaLanding persona={personaLock} onStart={() => startAssessment(personaLock)} />
+          <PersonaLanding
+            persona={personaLock}
+            hookOverride={settings.personaHooks[personaLock]}
+            onStart={() => startAssessment(personaLock)}
+          />
         ) : (
-          <Landing onStart={startAssessment} />
+          <Landing
+            onStart={startAssessment}
+            heroTitle={settings.content.heroTitle}
+            heroSubtitle={settings.content.heroSubtitle}
+          />
         ))}
 
       {step === "assessment" && (
@@ -133,6 +157,7 @@ export default function Funnel({ personaLock }: { personaLock?: PersonaId }) {
           score={score}
           savings={savings}
           leadName={lead?.name ?? ""}
+          courseUrls={settings.courseUrls}
           onOfferClick={() => {
             behavior.current.offerClicked = true;
             if (lead) sendLead(lead, "offer_click");

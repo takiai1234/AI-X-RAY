@@ -3,10 +3,32 @@
 import { PERSONA_LIST } from "@/lib/personas";
 import type { PersonaId } from "@/lib/types";
 
+// Render tiêu đề: *chữ* trong dấu sao được tô màu cam
+function HeroTitle({ text }: { text: string }) {
+  const parts = text.split(/\*([^*]+)\*/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        i % 2 === 1 ? (
+          <span key={i} className="text-cam">
+            {part}
+          </span>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
+
 export default function Landing({
   onStart,
+  heroTitle,
+  heroSubtitle,
 }: {
   onStart: (persona: PersonaId) => void;
+  heroTitle: string;
+  heroSubtitle: string;
 }) {
   return (
     <div className="mx-auto max-w-3xl px-4 pb-16">
@@ -17,13 +39,10 @@ export default function Landing({
           AI X-RAY
         </div>
         <h1 className="text-3xl font-extrabold leading-tight text-navy-dark sm:text-4xl">
-          Bạn đang bỏ phí <span className="text-cam">bao nhiêu giờ</span> mỗi
-          tháng vì chưa dùng AI đúng cách?
+          <HeroTitle text={heroTitle} />
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base text-slate-600">
-          Quét công việc của bạn trong 2 phút. Nhận AI Score, bản đồ cơ hội AI
-          hóa và lộ trình 30 ngày cá nhân hóa. Kèm 1 AI Agent chạy thử ngay,
-          miễn phí.
+          {heroSubtitle}
         </p>
       </header>
 

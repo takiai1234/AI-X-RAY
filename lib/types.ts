@@ -100,6 +100,17 @@ export interface Lead {
   channel: "zalo" | "email" | "sdt";
 }
 
+// Phần cấu hình công khai (không chứa pixel/secret) truyền xuống client
+export interface PublicSettings {
+  content: {
+    heroTitle: string; // dùng *chữ* để tô màu cam
+    heroSubtitle: string;
+  };
+  personaHooks: Record<string, string>;
+  courseUrls: Record<string, string>;
+  hourlyRate: number;
+}
+
 export type FunnelStep =
   | "landing"
   | "assessment"

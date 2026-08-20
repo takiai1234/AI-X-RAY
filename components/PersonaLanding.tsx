@@ -62,11 +62,14 @@ const BENEFITS: Record<PersonaId, [string, string][]> = {
 export default function PersonaLanding({
   persona,
   onStart,
+  hookOverride,
 }: {
   persona: PersonaId;
   onStart: () => void;
+  hookOverride?: string;
 }) {
   const p = PERSONAS[persona];
+  const hook = hookOverride || p.hook;
 
   return (
     <div className="mx-auto max-w-3xl px-4 pb-16">
@@ -76,7 +79,7 @@ export default function PersonaLanding({
           {SUB_BRAND[persona]}
         </div>
         <h1 className="text-3xl font-extrabold leading-tight text-navy-dark sm:text-4xl">
-          {p.hook}
+          {hook}
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base text-slate-600">
           Dành riêng cho {p.label}. Quét trong 2 phút, nhận kết quả cá nhân

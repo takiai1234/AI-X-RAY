@@ -40,6 +40,8 @@ export function track(event: FunnelEvent, data: Record<string, unknown> = {}) {
   };
   // Đẩy vào dataLayer cho GTM/pixel nếu có
   (window as unknown as { dataLayer?: unknown[] }).dataLayer?.push(payload);
+  // Bắn event vào pixel (nếu admin đã gắn ID)
+  fireToPixels(event, data);
   // Gửi về server để log + forward webhook
   navigator.sendBeacon?.(
     "/api/track",
@@ -55,4 +57,38 @@ export function track(event: FunnelEvent, data: Record<string, unknown> = {}) {
 
 export function getSessionId() {
   return sessionId();
+}
+
+type PixelWindow = {
+  gtag?: (...args: unknown[]) => void;
+  fbq?: (...args: unknown[]) => void;
+  ttq?: { track?: (event: string, data?: Record<string, unknown>) => void };
+};
+
+// Map event phễu sang event chuẩn của từng nền tảng quảng cáo
+function fireToPixels(event: string, data: Record<string, unknown>) {
+  const w = window as unknown as PixelWindow;
+  try {
+    // Google: mọi event đều bắn (GA4/Ads dùng làm conversion tùy chọn)
+    w.gtag?.("event", event, data);
+
+    // Facebook: event chuẩn cho các mốc quan trọng, còn lại trackCustom
+    if (w.fbq) {
+      if (event === "lead_submit") w.fbq("track", "Lead");
+      else if (event === "assessment_start") w.fbq("track", "InitiateCheckout");
+      else if (event === "report_view") w.fbq("track", "ViewContent");
+      else if (event === "offer_click") w.fbq("trackCustom", "OfferClick", data);
+      else if (event === "purchase") w.fbq("track", "Purchase");
+      else if (!event.startsWith("question_step")) w.fbq("trackCustom", event, data);
+    }
+
+    // TikTok: chỉ bắn event chuẩn
+    if (w.ttq?.track) {
+      if (event === "lead_submit") w.ttq.track("SubmitForm");
+      else if (event === "offer_click") w.ttq.track("ClickButton");
+      else if (event === "purchase") w.ttq.track("CompletePayment");
+    }
+  } catch {
+    // pixel không được phép làm vỡ luồng chính
+  }
 }

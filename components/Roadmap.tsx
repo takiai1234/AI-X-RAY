@@ -11,12 +11,14 @@ export default function Roadmap({
   score,
   savings,
   leadName,
+  courseUrls,
   onOfferClick,
 }: {
   answers: AssessmentAnswers;
   score: ScoreResult;
   savings: SavingsResult;
   leadName: string;
+  courseUrls?: Record<string, string>;
   onOfferClick: () => void;
 }) {
   const p = PERSONAS[answers.persona ?? "office"];
@@ -43,7 +45,7 @@ export default function Roadmap({
   const openOffer = (courseName: string) => {
     track("offer_click", { course: courseName, persona: answers.persona });
     onOfferClick();
-    window.open(courseUrl(courseName), "_blank");
+    window.open(courseUrls?.[courseName] || courseUrl(courseName), "_blank");
   };
 
   return (
