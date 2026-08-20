@@ -78,7 +78,7 @@ export default function PersonaLanding({
           <span className="h-2 w-2 animate-pulse rounded-full bg-cam" />
           {SUB_BRAND[persona]}
         </div>
-        <h1 className="text-3xl font-extrabold leading-tight text-navy-dark sm:text-4xl">
+        <h1 className="text-3xl font-extrabold leading-tight text-navy-dark sm:text-[3.5rem] sm:leading-[1.15]">
           {hook}
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base text-slate-600">
