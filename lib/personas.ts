@@ -80,9 +80,9 @@ ${AGENT_BASE_RULES}`,
 Đây mới là một Agent đơn lẻ. Khi anh/chị tự xây được hệ thống Agent và Automation cho từng phòng ban, mức hiệu quả sẽ lớn hơn nhiều — bước tiếp theo nên học cách tự thiết kế quy trình AI hóa cho chính doanh nghiệp mình.`,
     },
     courses: [
-      { name: "AI For CEO", reason: "Dành cho chủ doanh nghiệp chưa rành công nghệ, học cách ra quyết định AI hóa từng phòng ban." },
-      { name: "AI Business System", reason: "Xây hệ thống kinh doanh vận hành bằng AI: content, sales, chăm khách, báo cáo." },
-      { name: "AI Scale Up Coaching", reason: "Đồng hành 1-1 để triển khai Agent và Automation vào đúng quy trình của doanh nghiệp." },
+      { name: "AI Business System", reason: "Khóa 3 ngày xây hệ thống marketing-sales tự động 24/7 và trợ lý AI cho doanh nghiệp — khớp thẳng các quy trình vừa chẩn đoán." },
+      { name: "AI Scale Up Coaching", reason: "Đồng hành 1-1 để triển khai Agent và Automation vào đúng quy trình của doanh nghiệp bạn." },
+      { name: "AI Super Power", reason: "6 buổi tối nắm nền tảng tư duy và công cụ AI trước khi hệ thống hóa cả doanh nghiệp." },
     ],
     roadmapPhases: [
       "Prompt chuẩn cho việc cá nhân của CEO",
@@ -169,9 +169,8 @@ Nhiều bạn inbox hỏi vì sao dùng mãi không thấy khác biệt. Câu tr
 Một Agent đã tạo được bộ content và kịch bản này trong một phút. Bước tiếp theo đáng học là tự xây hệ thống Agent chạy content, chăm khách và phân tích ads cho chính shop của bạn.`,
     },
     courses: [
-      { name: "Ecom Empire", reason: "Hệ thống bán hàng ecommerce hoàn chỉnh, khớp với gap vận hành và content." },
-      { name: "AI Super Traffic", reason: "Kéo traffic bằng AI cho kênh bán, giải quyết gap thiếu traffic." },
-      { name: "TikTok Business Mastery", reason: "Khai thác TikTok Shop bài bản nếu kênh chính là TikTok." },
+      { name: "AI Business System", reason: "Xây hệ thống marketing-sales tự động 24/7 và kênh nội dung chi phí gần 0đ — khớp gap content, chăm khách, vận hành của shop." },
+      { name: "AI Super Power", reason: "6 buổi tối làm chủ công cụ AI tạo nội dung viral và kéo traffic bán hàng." },
     ],
     roadmapPhases: [
       "Prompt content bán hàng chuẩn",
@@ -245,8 +244,8 @@ Trân trọng.
 Một task vừa xong trong một phút. Nếu bạn học cách nối các task này thành quy trình tự động, mỗi ngày có thể lấy lại vài giờ — đó là bước tiếp theo đáng đầu tư.`,
     },
     courses: [
-      { name: "Siêu Trợ Lý Nhân Hiệu", reason: "Biến AI thành trợ lý cá nhân xử lý email, slide, báo cáo hàng ngày." },
-      { name: "AI Super Builder", reason: "Học tự xây công cụ và quy trình AI cho công việc của chính mình." },
+      { name: "AI Super Power", reason: "6 buổi tối tăng tốc công việc văn phòng bằng AI và mở thêm nguồn thu nhập từ kỹ năng mới." },
+      { name: "Siêu Trợ Lý Nhân Hiệu", reason: "Biến AI thành trợ lý cá nhân xử lý email, slide, báo cáo và xây nhân hiệu của riêng bạn." },
     ],
     roadmapPhases: [
       "Prompt chuẩn cho email và báo cáo",
@@ -324,8 +323,8 @@ ${AGENT_BASE_RULES}`,
 Bạn vừa có sản phẩm, script, caption và prompt video trong một phút. Bước tiếp theo đáng học là xây cả dây chuyền: AI tìm sản phẩm, viết script, dựng video và phân tích đơn cho nhiều kênh cùng lúc.`,
     },
     courses: [
-      { name: "Affiliate Systems", reason: "Hệ thống affiliate hoàn chỉnh từ chọn sản phẩm đến scale kênh." },
-      { name: "TikTok Business Mastery", reason: "Làm chủ TikTok nếu nền tảng chính là TikTok." },
+      { name: "AI Super Power", reason: "Có riêng phần tối ưu affiliate bằng AI: tìm sản phẩm, làm nội dung viral, kéo traffic — khớp thẳng gap của bạn." },
+      { name: "AI Business System", reason: "Nâng cấp từ làm affiliate đơn lẻ lên hệ thống kênh nội dung và bán hàng tự động." },
     ],
     roadmapPhases: [
       "Chọn ngách + AI tìm sản phẩm",
@@ -407,9 +406,8 @@ Tuần 2: hậu trường; số liệu gây tò mò; phản hồi người dùng
 Khung này AI dựng trong một phút. Bước tiếp theo đáng học là nối cả phễu thành hệ thống: AI research, sản xuất content, phân tích ads và báo cáo tự động hàng tuần.`,
     },
     courses: [
-      { name: "AI Super Traffic", reason: "Kéo traffic đa kênh bằng AI, khớp gap thiếu lead." },
-      { name: "Facebook Marketing 6.0", reason: "Chuyên sâu quảng cáo Facebook nếu đây là kênh chính." },
-      { name: "AI Business System", reason: "Hệ thống hóa toàn bộ marketing bằng AI." },
+      { name: "AI Super Power", reason: "6 buổi tối làm chủ AI tạo nội dung viral, kéo traffic và tăng tốc mọi đầu việc marketing." },
+      { name: "AI Business System", reason: "Hệ thống hóa toàn bộ marketing-sales thành cỗ máy tự động 24/7." },
     ],
     roadmapPhases: [
       "Prompt research và phân tích đối thủ",
@@ -487,8 +485,8 @@ Tâm lý thật: khách chưa đủ tin hoặc chưa thấy cấp thiết; "bàn
 Một Agent huấn luyện được như vậy trong một phút. Bước tiếp theo đáng học là xây trợ lý sales của riêng bạn: tự ghi chú CRM, nhắc follow-up và luyện kịch bản mỗi ngày.`,
     },
     courses: [
-      { name: "AI Business System", reason: "Hệ thống sales và chăm khách vận hành bằng AI." },
-      { name: "Siêu Trợ Lý Nhân Hiệu", reason: "Xây trợ lý AI cá nhân cho công việc sales hàng ngày." },
+      { name: "AI Super Power", reason: "6 buổi tối làm chủ AI cho kịch bản, follow-up và tăng tốc mọi việc lặp lại trong sales." },
+      { name: "AI Business System", reason: "Xây hệ thống sales và chăm khách tự động 24/7 bằng AI." },
     ],
     roadmapPhases: [
       "Kịch bản gọi và nhắn bằng AI",
@@ -576,8 +574,8 @@ Chúng tôi tìm một bạn content biến ý tưởng thành video ngắn có 
 Bộ tài liệu này AI tạo trong một phút. Bước tiếp theo đáng học là chuẩn hóa cả quy trình nhân sự và sổ sách bằng AI: từ tuyển dụng, giấy tờ đến báo cáo tự cập nhật.`,
     },
     courses: [
-      { name: "AI Business System", reason: "Chuẩn hóa quy trình nhân sự và vận hành nội bộ bằng AI." },
-      { name: "Siêu Trợ Lý Nhân Hiệu", reason: "Trợ lý AI cá nhân cho công việc HR hàng ngày." },
+      { name: "AI Super Power", reason: "6 buổi tối tăng tốc việc giấy tờ, nhập liệu, văn bản bằng AI — khớp gap tốn giờ nhất của bạn." },
+      { name: "AI Business System", reason: "Chuẩn hóa quy trình nhân sự và sổ sách thành hệ thống AI tự vận hành." },
     ],
     roadmapPhases: [
       "Prompt chuẩn cho JD, email, văn bản",
@@ -663,9 +661,8 @@ ${AGENT_BASE_RULES}`,
 Gói nội dung này AI tạo trong một phút. Bước tiếp theo đáng học là xây dây chuyền nội dung: AI tìm ý tưởng, viết script, dựng video và phân tích số liệu cho cả tuần chỉ trong một buổi.`,
     },
     courses: [
-      { name: "AI Personality Master", reason: "Xây thương hiệu cá nhân bằng AI, khớp gap phát triển kênh." },
-      { name: "AI Super Builder", reason: "Tự xây dây chuyền sản xuất nội dung AI cho kênh của mình." },
-      { name: "TikTok Business Mastery", reason: "Khai thác TikTok chuyên sâu nếu đây là nền tảng chính." },
+      { name: "Siêu Trợ Lý Nhân Hiệu", reason: "Xây nhân hiệu bài bản với AI làm trợ lý sản xuất nội dung — khớp gap phát triển kênh." },
+      { name: "AI Super Power", reason: "6 buổi tối làm chủ công cụ AI tạo nội dung viral và tăng tốc cả dây chuyền sản xuất." },
     ],
     roadmapPhases: [
       "Ngân hàng ý tưởng + hook bằng AI",
@@ -680,18 +677,12 @@ Gói nội dung này AI tạo trong một phút. Bước tiếp theo đáng họ
 export const PERSONA_LIST = Object.values(PERSONAS);
 
 // Link đăng ký thật của từng chương trình. Chưa có link riêng thì fallback về taki.vn.
+// Danh mục 4 chương trình đang mở bán (đã rút gọn theo chỉ đạo)
 export const COURSE_URLS: Record<string, string> = {
-  "AI For CEO": "https://aiforceo.nguyentatkiem.com/",
-  "AI Business System": "https://aibusiness.taki.vn/",
-  "AI Scale Up Coaching": "https://aiscaleupcoaching.taki.vn/",
-  "Ecom Empire": "https://ecom.nguyentatkiem.com.vn/",
-  "AI Super Traffic": "https://aisupertraffic.taki.vn/",
-  "TikTok Business Mastery": "https://tiktok.taki.vn/",
+  "AI Super Power": "https://aisuperpower.taki.vn/",
+  "AI Business System": "https://aibusiness.nguyentatkiem.com/aiagent",
   "Siêu Trợ Lý Nhân Hiệu": "https://brandup.taki.vn/",
-  "AI Super Builder": "https://aisuperbuilder.taki.vn/",
-  "Affiliate Systems": "https://aiaffiliate.nguyentatkiem.com/",
-  "Facebook Marketing 6.0": "https://facebookmkt.taki.vn/",
-  "AI Personality Master": "https://aipersonalitymaster.taki.vn/",
+  "AI Scale Up Coaching": "https://aiscaleupcoaching.taki.vn/",
 };
 
 export const COURSE_FALLBACK_URL = "https://taki.vn";

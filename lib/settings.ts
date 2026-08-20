@@ -53,6 +53,20 @@ export function defaultSettings(): SiteSettings {
   };
 }
 
+// Chỉ giữ link của các khóa còn trong danh mục hiện hành — khóa đã bỏ thì
+// link cũ trong settings không được đè lên danh mục mới.
+function mergeCourseUrls(
+  def: Record<string, string>,
+  raw: Record<string, string> | undefined,
+): Record<string, string> {
+  const out = { ...def };
+  if (!raw) return out;
+  for (const k of Object.keys(def)) {
+    if (typeof raw[k] === "string" && raw[k].startsWith("http")) out[k] = raw[k];
+  }
+  return out;
+}
+
 export async function getSettings(): Promise<SiteSettings> {
   const def = defaultSettings();
   try {
@@ -60,7 +74,7 @@ export async function getSettings(): Promise<SiteSettings> {
     return {
       content: { ...def.content, ...(raw.content ?? {}) },
       personaHooks: { ...def.personaHooks, ...(raw.personaHooks ?? {}) },
-      courseUrls: { ...def.courseUrls, ...(raw.courseUrls ?? {}) },
+      courseUrls: mergeCourseUrls(def.courseUrls, raw.courseUrls),
       hourlyRate: Number(raw.hourlyRate) > 0 ? Number(raw.hourlyRate) : def.hourlyRate,
       pixels: { ...def.pixels, ...(raw.pixels ?? {}) },
       integrations: { ...def.integrations, ...(raw.integrations ?? {}) },
