@@ -13,6 +13,10 @@ export interface SiteSettings extends PublicSettings {
     tiktokPixelId: string;
     customHead: string; // HTML/script tùy ý (GTM, pixel khác...)
   };
+  integrations: {
+    sheetWebhookUrl: string; // Google Apps Script Web App URL — lead đổ vào Google Sheet
+    crmWebhookUrl: string; // webhook CRM/n8n/Lark (ưu tiên hơn env CRM_WEBHOOK_URL)
+  };
 }
 
 const FILE = path.join(process.cwd(), "data", "settings.json");
@@ -36,6 +40,10 @@ export function defaultSettings(): SiteSettings {
       tiktokPixelId: "",
       customHead: "",
     },
+    integrations: {
+      sheetWebhookUrl: "",
+      crmWebhookUrl: "",
+    },
   };
 }
 
@@ -49,6 +57,7 @@ export async function getSettings(): Promise<SiteSettings> {
       courseUrls: { ...def.courseUrls, ...(raw.courseUrls ?? {}) },
       hourlyRate: Number(raw.hourlyRate) > 0 ? Number(raw.hourlyRate) : def.hourlyRate,
       pixels: { ...def.pixels, ...(raw.pixels ?? {}) },
+      integrations: { ...def.integrations, ...(raw.integrations ?? {}) },
     };
   } catch {
     return def;

@@ -14,9 +14,13 @@ type Settings = {
     tiktokPixelId: string;
     customHead: string;
   };
+  integrations: {
+    sheetWebhookUrl: string;
+    crmWebhookUrl: string;
+  };
 };
 
-type Tab = "noidung" | "khoahoc" | "pixel";
+type Tab = "noidung" | "khoahoc" | "pixel" | "dulieu";
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState<boolean | null>(null);
@@ -119,7 +123,8 @@ export default function AdminPage() {
           [
             ["noidung", "📝 Nội dung"],
             ["khoahoc", "🎓 Khóa học"],
-            ["pixel", "📡 Pixel & Tracking"],
+            ["pixel", "📡 Pixel"],
+            ["dulieu", "📊 Dữ liệu"],
           ] as [Tab, string][]
         ).map(([t, label]) => (
           <button
@@ -264,6 +269,83 @@ export default function AdminPage() {
               onChange={(e) => set({ pixels: { ...s.pixels, customHead: e.target.value } })}
             />
           </Field>
+        </div>
+      )}
+
+      {/* Tab Dữ liệu */}
+      {tab === "dulieu" && (
+        <div className="mt-5 space-y-5">
+          <div className="rounded-xl bg-navy/5 p-4 text-sm text-slate-700">
+            <p className="font-bold text-navy-dark">Dữ liệu lead đang được lưu ở đâu?</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5">
+              <li>
+                <b>File trên server</b> (luôn bật): <code>data/leads/*.jsonl</code> — backup an
+                toàn, không bao giờ mất lead.
+              </li>
+              <li>
+                <b>Google Sheet</b>: điền URL bên dưới, mỗi lead thành 1 dòng, tự cập nhật khi
+                khách đi tiếp trong phễu.
+              </li>
+              <li>
+                <b>CRM/n8n/Lark</b>: điền webhook bên dưới để nhận lead realtime.
+              </li>
+            </ul>
+          </div>
+
+          <Field
+            label="Google Sheet Webhook URL"
+            hint="Cách lấy: tạo Google Sheet → Tiện ích mở rộng → Apps Script → dán script trong file docs/google-sheet-apps-script.gs (có sẵn trong repo GitHub) → Triển khai dạng Ứng dụng web (quyền: Bất kỳ ai) → copy URL /exec dán vào đây."
+          >
+            <input
+              className="input"
+              placeholder="https://script.google.com/macros/s/XXXX/exec"
+              value={s.integrations.sheetWebhookUrl}
+              onChange={(e) =>
+                set({
+                  integrations: { ...s.integrations, sheetWebhookUrl: e.target.value.trim() },
+                })
+              }
+            />
+          </Field>
+
+          <Field
+            label="CRM Webhook URL (n8n / Lark / CRM khác)"
+            hint="Mỗi lead sẽ POST JSON đầy đủ (hồ sơ + AI Score + lead score + behavior) về URL này."
+          >
+            <input
+              className="input"
+              placeholder="https://n8n.taki.vn/webhook/..."
+              value={s.integrations.crmWebhookUrl}
+              onChange={(e) =>
+                set({
+                  integrations: { ...s.integrations, crmWebhookUrl: e.target.value.trim() },
+                })
+              }
+            />
+          </Field>
+
+          <button
+            className="btn-ghost w-full"
+            onClick={async () => {
+              const res = await fetch("/api/lead", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  session_id: "s_test_admin_" + Date.now(),
+                  stage: "test_tu_admin",
+                  lead: { name: "Lead Test từ Admin", phone: "0900000000", email: "test@taki.vn" },
+                  answers: { persona: "ceo", goal: "Kiểm tra kết nối", painPoint: "—", scale: "—", aiUsageLevel: "hang_ngay" },
+                  ai_score: 50, ai_level: 5, ai_level_name: "AI Marketer", lead_score: 50,
+                  behavior: { demoDone: true, roadmapViewed: true, offerClicked: false },
+                  landing: "/admin-test",
+                  utm: { utm_source: "admin_test" },
+                }),
+              });
+              alert(res.ok ? "Đã gửi lead test! Kiểm tra Google Sheet / CRM xem có dòng 'Lead Test từ Admin' chưa. (Nhớ bấm Lưu thay đổi trước khi test)" : "Gửi thất bại");
+            }}
+          >
+            🧪 Gửi 1 lead test để kiểm tra kết nối
+          </button>
         </div>
       )}
 

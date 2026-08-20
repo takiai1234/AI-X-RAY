@@ -30,6 +30,7 @@ export async function POST(req: Request) {
     hourlyRate:
       Number(b.hourlyRate) > 0 ? Number(b.hourlyRate) : cur.hourlyRate,
     pixels: { ...cur.pixels, ...(b.pixels ?? {}) },
+    integrations: { ...cur.integrations, ...(b.integrations ?? {}) },
   };
   await saveSettings(next);
   return Response.json({ ok: true, settings: next });

@@ -65,6 +65,9 @@ export default function Funnel({
       lead_score: computeLeadScore(answers, score.score, behavior.current),
       behavior: { ...behavior.current },
       landing: personaLock ? `/${personaLock}` : "/",
+      utm: Object.fromEntries(
+        new URLSearchParams(window.location.search).entries(),
+      ),
     };
   };
 
