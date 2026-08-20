@@ -42,7 +42,10 @@ export default function Funnel({
 
   const score = useMemo(() => (answers ? computeScore(answers) : null), [answers]);
   const savings = useMemo(
-    () => (answers ? computeSavings(answers, settings.hourlyRate) : null),
+    () =>
+      answers
+        ? computeSavings(answers, answers.hourlyRateSelf || settings.hourlyRate)
+        : null,
     [answers, settings.hourlyRate],
   );
 

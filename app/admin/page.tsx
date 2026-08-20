@@ -466,8 +466,8 @@ export default function AdminPage() {
             />
           </Field>
           <Field
-            label="Đơn giá quy đổi (đ/giờ)"
-            hint="Dùng cho phần tính tiền cơ hội trong report. Mặc định 80.000đ/giờ."
+            label="Đơn giá quy đổi dự phòng (đ/giờ)"
+            hint="Khách TỰ CHỌN chi phí giờ công trong bài test (câu 4) — con số đó được ưu tiên. Đơn giá này chỉ dùng khi thiếu dữ liệu khách chọn."
           >
             <input
               className="input"

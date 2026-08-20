@@ -148,14 +148,15 @@ export default function Report({
             <b className="text-cam">{savings.totalSavedHours} giờ/tháng</b>.
           </p>
           <p className="mt-1 text-sm">
-            Quy đổi theo chi phí lao động {formatVnd(savings.hourlyRate)}/giờ,
-            đây là khoảng{" "}
+            Quy đổi theo chi phí giờ công {formatVnd(savings.hourlyRate)}/giờ{" "}
+            <b>theo mức bạn khai báo</b>, đây là khoảng{" "}
             <b className="text-cam">{formatVnd(savings.moneyPerMonth)}/tháng</b>{" "}
             <b>cơ hội tối ưu</b>.
           </p>
           <p className="mt-2 text-[11px] text-slate-300">
-            * Đây là con số cơ hội ước tính dựa trên khai báo của bạn và tỷ lệ
-            hỗ trợ minh họa theo từng loại việc, không phải cam kết tiết kiệm.
+            * Đây là con số cơ hội ước tính dựa trên số giờ và chi phí giờ công
+            bạn khai báo, cùng tỷ lệ hỗ trợ minh họa theo từng loại việc — không
+            phải cam kết tiết kiệm.
           </p>
         </div>
       </Section>

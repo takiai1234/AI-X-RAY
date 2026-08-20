@@ -22,10 +22,10 @@ export const AI_LEVELS = [
 
 const USAGE_POINTS: Record<string, number> = {
   chua_dung: 0,
-  thinh_thoang: 12,
-  hang_ngay: 24,
-  co_workflow: 34,
-  co_agent: 45,
+  thinh_thoang: 15,
+  hang_ngay: 28,
+  co_workflow: 40,
+  co_agent: 50,
 };
 
 const USAGE_LABEL: Record<string, string> = {
@@ -37,21 +37,18 @@ const USAGE_LABEL: Record<string, string> = {
 };
 
 // Logic điểm minh bạch (nguyên tắc triển khai mục 23: score phải có logic rõ, tránh số ảo).
-// Tổng 100 = mức sử dụng (45) + độ phủ công cụ (20) + sẵn sàng automation (15)
-//           + tỷ lệ task đã được AI hỗ trợ (20)
+// Tổng 100 = mức sử dụng AI (50) + sẵn sàng automation (20)
+//           + tỷ lệ công việc đã được AI hỗ trợ (30)
 export function computeScore(a: AssessmentAnswers): ScoreResult {
   const persona = PERSONAS[a.persona ?? "office"];
 
   const usagePts = USAGE_POINTS[a.aiUsageLevel] ?? 0;
 
-  const realTools = a.aiTools.filter((t) => t !== "Khác");
-  const toolPts = Math.min(20, realTools.length * 5);
-
   const autoPts =
     a.automationReady === "san_sang"
-      ? 15
+      ? 20
       : a.automationReady === "can_tim_hieu"
-        ? 8
+        ? 10
         : 0;
 
   // Task coverage: người chưa dùng AI thì các task chọn coi như 0% được hỗ trợ
@@ -65,12 +62,9 @@ export function computeScore(a: AssessmentAnswers): ScoreResult {
           : a.aiUsageLevel === "co_workflow"
             ? 0.75
             : 0.9;
-  const taskPts = Math.round(20 * usageFactor);
+  const taskPts = Math.round(30 * usageFactor);
 
-  const score = Math.max(
-    2,
-    Math.min(100, usagePts + toolPts + autoPts + taskPts),
-  );
+  const score = Math.max(2, Math.min(100, usagePts + autoPts + taskPts));
 
   // Map điểm sang level 1-10, có trần theo mức sử dụng thật để level không vượt
   // năng lực đại diện trong bảng level (nguyên tắc: score phải có logic minh bạch)
@@ -88,17 +82,16 @@ export function computeScore(a: AssessmentAnswers): ScoreResult {
   const levelName = AI_LEVELS[level - 1].name;
 
   const strengths: string[] = [];
-  if (usagePts >= 24) strengths.push(`Đã đưa AI vào nhịp làm việc: ${USAGE_LABEL[a.aiUsageLevel]}.`);
+  if (usagePts >= 28) strengths.push(`Đã đưa AI vào nhịp làm việc: ${USAGE_LABEL[a.aiUsageLevel]}.`);
   else if (usagePts > 0) strengths.push("Đã bắt đầu tiếp xúc với AI, có nền để tăng tốc nhanh.");
   else strengths.push("Bắt đầu từ trang trắng: dễ xây thói quen AI đúng ngay từ đầu, không phải sửa thói quen cũ.");
-  if (realTools.length >= 2) strengths.push(`Quen với ${realTools.length} công cụ AI (${realTools.slice(0, 3).join(", ")}...).`);
   if (a.automationReady === "san_sang") strengths.push("Sẵn sàng kết nối công cụ để tự động hóa, đây là điều kiện để lên Level 6+.");
-  if (a.goal) strengths.push(`Mục tiêu rõ ràng: ${a.goal.toLowerCase()}.`);
+  else if (a.automationReady === "can_tim_hieu") strengths.push("Cởi mở với tự động hóa, chỉ thiếu người dẫn đường đúng thứ tự.");
+  if (a.painPoint) strengths.push(`Xác định rõ vấn đề ưu tiên: ${a.painPoint.toLowerCase()}.`);
 
   const gaps: string[] = [];
-  if (usagePts < 34) gaps.push("Chưa có workflow AI lặp lại được: mỗi lần dùng vẫn là một lần mò.");
+  if (usagePts < 40) gaps.push("Chưa có workflow AI lặp lại được: mỗi lần dùng vẫn là một lần mò.");
   if (a.aiUsageLevel !== "co_agent") gaps.push("Chưa có AI Agent làm việc theo vai trò: AI mới trả lời, chưa chủ động làm thay.");
-  if (realTools.length < 2) gaps.push("Độ phủ công cụ hẹp: mới quanh chat, chưa chạm mảng ảnh/video/automation.");
   if (a.automationReady !== "san_sang") gaps.push("Chưa kết nối các công cụ với nhau: dữ liệu và việc vẫn phải chuyển tay.");
   const topTaskLabels = persona.taskLibrary
     .filter((t) => a.topTasks.includes(t.id))
@@ -112,10 +105,9 @@ export function computeScore(a: AssessmentAnswers): ScoreResult {
     level,
     levelName,
     breakdown: [
-      { label: `Mức sử dụng AI (${USAGE_LABEL[a.aiUsageLevel]})`, points: usagePts, max: 45 },
-      { label: `Độ phủ công cụ (${realTools.length} công cụ)`, points: toolPts, max: 20 },
-      { label: "Mức sẵn sàng tự động hóa", points: autoPts, max: 15 },
-      { label: "Tỷ lệ công việc đã được AI hỗ trợ", points: taskPts, max: 20 },
+      { label: `Mức sử dụng AI (${USAGE_LABEL[a.aiUsageLevel]})`, points: usagePts, max: 50 },
+      { label: "Mức sẵn sàng tự động hóa", points: autoPts, max: 20 },
+      { label: "Tỷ lệ công việc đã được AI hỗ trợ", points: taskPts, max: 30 },
     ],
     strengths: strengths.slice(0, 3),
     gaps: gaps.slice(0, 5),

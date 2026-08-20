@@ -29,6 +29,8 @@ export const PERSONAS: Record<string, PersonaDef> = {
       "Không biết bắt đầu AI hóa từ đâu",
       "Content và marketing phụ thuộc vài người",
       "Phải nhắc việc từng nhân sự",
+      "Mọi việc quan trọng đều phải qua tay mình",
+      "Nhân sự ngại thay đổi, khó đưa công nghệ mới vào",
     ],
     scaleQuestion: {
       label: "Quy mô doanh nghiệp của anh/chị?",
@@ -97,6 +99,8 @@ ${AGENT_BASE_RULES}`,
       "Inbox nhiều nhưng chốt được ít",
       "Chăm khách và vận hành thủ công",
       "Không kịp làm video đều đặn",
+      "Đối thủ bán nhanh hơn, giá cạnh tranh hơn",
+      "Quảng cáo tốn tiền mà đơn không ổn định",
     ],
     scaleQuestion: {
       label: "Quy mô bán hàng hiện tại?",
@@ -173,6 +177,8 @@ Một Agent đã tạo được bộ content và kịch bản này trong một p
       "Việc lặp lại nhàm chán, không còn giờ học thêm",
       "Sợ bị AI thay thế nhưng chưa biết bắt đầu từ đâu",
       "Muốn được ghi nhận và thăng tiến",
+      "Việc ngày càng nhiều nhưng lương chưa tăng",
+      "Muốn kiếm thêm thu nhập ngoài giờ",
     ],
     scaleQuestion: {
       label: "Vai trò hiện tại của bạn?",
@@ -234,6 +240,8 @@ Một task vừa xong trong một phút. Nếu bạn học cách nối các task
       "Viết script và làm video quá chậm",
       "Đăng nhiều nhưng không ra đơn",
       "Không đủ sức làm nội dung đều",
+      "Video có view nhưng không chuyển thành đơn",
+      "Chưa biết chọn ngách nào để bắt đầu",
     ],
     scaleQuestion: {
       label: "Bạn đang ở giai đoạn nào?",
@@ -300,6 +308,8 @@ Bạn vừa có sản phẩm, script, caption và prompt video trong một phút
       "Deadline content dồn dập",
       "Phân tích ads thủ công",
       "Ý tưởng cạn dần",
+      "Ngân sách bị cắt nhưng KPI giữ nguyên",
+      "Phụ thuộc designer / agency, chờ đợi lâu",
     ],
     scaleQuestion: {
       label: "Bạn đang làm marketing ở đâu?",
@@ -371,6 +381,8 @@ Khung này AI dựng trong một phút. Bước tiếp theo đáng học là n�
       "Từ chối nhiều mà chưa xử lý tốt",
       "Quên follow-up, sót khách",
       "Việc nhập liệu chiếm giờ bán hàng",
+      "Data khách cũ bỏ không, chưa khai thác lại",
+      "Khó tìm hiểu khách trước khi gặp",
     ],
     scaleQuestion: {
       label: "Bạn đang bán gì?",
@@ -438,6 +450,8 @@ Một Agent huấn luyện được như vậy trong một phút. Bước tiếp
       "Lọc CV, làm JD thủ công quá lâu",
       "Báo cáo lương, thuế, công nợ dồn cuối tháng",
       "Quy trình giấy tờ mỗi lần một kiểu",
+      "Số liệu nằm rải rác nhiều file Excel",
+      "Tuyển mãi không đủ người",
     ],
     scaleQuestion: {
       label: "Quy mô công ty bạn phụ trách?",
@@ -513,6 +527,8 @@ Bộ tài liệu này AI tạo trong một phút. Bước tiếp theo đáng h�
       "Sản xuất một video mất cả ngày",
       "Kênh tăng chậm không rõ vì sao",
       "Không kịp làm đa nền tảng",
+      "Thu nhập từ kênh chưa ổn định",
+      "Ngại lên hình, muốn làm faceless",
     ],
     scaleQuestion: {
       label: "Kênh của bạn đang ở đâu?",

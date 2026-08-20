@@ -17,12 +17,13 @@ export type AiUsageLevel =
 
 export interface AssessmentAnswers {
   persona: PersonaId | null;
-  goal: string; // mục tiêu 3-6 tháng
+  goal: string; // (không còn hỏi riêng, giữ field để tương thích payload)
   topTasks: string[]; // 3 công việc tốn thời gian nhất (từ task library persona)
   repetitiveHoursPerWeek: number; // giờ/tuần cho việc lặp lại
   aiUsageLevel: AiUsageLevel;
-  aiTools: string[]; // công cụ AI đang dùng
-  scale: string; // quy mô: nhân sự/doanh thu (DN) hoặc vai trò/thu nhập mục tiêu (cá nhân)
+  aiTools: string[]; // (không còn hỏi riêng, giữ field để tương thích payload)
+  scale: string; // quy mô: nhân sự/quy mô bán (DN) hoặc vai trò (cá nhân)
+  hourlyRateSelf: number; // chi phí giờ công do khách TỰ CHỌN (đ/giờ) — dùng cho calculator
   painPoint: string; // vấn đề muốn AI giải quyết nhất
   automationReady: string; // sẵn sàng kết nối công cụ tự động hóa?
 }
