@@ -23,6 +23,9 @@ const config: Config = {
       fontFamily: {
         sans: ["Montserrat", "system-ui", "sans-serif"],
       },
+      maxWidth: {
+        "3xl": "54rem", // nới container chính (mặc định Tailwind là 48rem)
+      },
     },
   },
   plugins: [],
