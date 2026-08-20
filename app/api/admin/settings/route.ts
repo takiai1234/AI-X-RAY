@@ -2,14 +2,14 @@ import { isAuthed } from "@/lib/adminAuth";
 import { getSettings, saveSettings, defaultSettings } from "@/lib/settings";
 
 export async function GET(req: Request) {
-  if (!isAuthed(req)) {
+  if (!(await isAuthed(req))) {
     return Response.json({ error: "unauthorized" }, { status: 401 });
   }
   return Response.json(await getSettings());
 }
 
 export async function POST(req: Request) {
-  if (!isAuthed(req)) {
+  if (!(await isAuthed(req))) {
     return Response.json({ error: "unauthorized" }, { status: 401 });
   }
   let body: Record<string, unknown>;
