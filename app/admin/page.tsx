@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { PERSONAS } from "@/lib/personas";
 
 type Settings = {
-  content: { heroTitle: string; heroSubtitle: string };
+  content: {
+    heroTitle: string;
+    heroSubtitle: string;
+    metaTitle: string;
+    metaDescription: string;
+  };
   personaHooks: Record<string, string>;
   courseUrls: Record<string, string>;
   hourlyRate: number;
@@ -333,6 +338,29 @@ export default function AdminPage() {
       {/* Tab Nội dung */}
       {tab === "noidung" && (
         <div className="mt-5 space-y-5">
+          <Field
+            label="Tiêu đề tab trình duyệt (SEO title)"
+            hint="Hiện trên tab trình duyệt, kết quả Google và khi share link. Nên dưới 60 ký tự."
+          >
+            <input
+              className="input"
+              value={s.content.metaTitle}
+              onChange={(e) => set({ content: { ...s.content, metaTitle: e.target.value } })}
+            />
+          </Field>
+          <Field
+            label="Mô tả SEO (meta description)"
+            hint="Hiện dưới tiêu đề trong kết quả Google và khi share link Facebook/Zalo. Nên 120-160 ký tự."
+          >
+            <textarea
+              className="input"
+              rows={2}
+              value={s.content.metaDescription}
+              onChange={(e) =>
+                set({ content: { ...s.content, metaDescription: e.target.value } })
+              }
+            />
+          </Field>
           <Field
             label="Tiêu đề trang chủ (hero)"
             hint="Dùng *chữ* để tô màu cam. Ví dụ: Bạn đang bỏ phí *bao nhiêu giờ*..."

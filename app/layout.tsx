@@ -13,16 +13,18 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "AI X-RAY | Quét công việc. Tìm cơ hội AI.",
-  description:
-    "Bạn đang bỏ phí bao nhiêu tiền và bao nhiêu giờ mỗi tháng vì chưa dùng AI đúng cách? Quét miễn phí trong 2 phút, nhận AI Score và lộ trình AI cá nhân hóa.",
-  openGraph: {
-    title: "AI X-RAY | Quét công việc. Tìm cơ hội AI.",
-    description:
-      "Test miễn phí 2 phút: AI có thể thay bạn làm bao nhiêu % công việc? Nhận AI Score, bản đồ cơ hội AI hóa và lộ trình 30 ngày cá nhân hóa.",
-  },
-};
+// Title/description đọc từ settings — admin sửa được, áp dụng ngay
+export async function generateMetadata(): Promise<Metadata> {
+  const { content } = await getSettings();
+  return {
+    title: content.metaTitle,
+    description: content.metaDescription,
+    openGraph: {
+      title: content.metaTitle,
+      description: content.metaDescription,
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

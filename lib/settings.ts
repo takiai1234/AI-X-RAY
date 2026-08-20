@@ -28,6 +28,9 @@ export function defaultSettings(): SiteSettings {
         "Bạn đang bỏ phí *bao nhiêu giờ* mỗi tháng vì chưa dùng AI đúng cách?",
       heroSubtitle:
         "Quét công việc của bạn trong 2 phút. Nhận AI Score, bản đồ cơ hội AI hóa và lộ trình 30 ngày cá nhân hóa. Kèm 1 AI Agent chạy thử ngay, miễn phí.",
+      metaTitle: "AI X-RAY | Quét công việc. Tìm cơ hội AI.",
+      metaDescription:
+        "Bạn đang bỏ phí bao nhiêu tiền và bao nhiêu giờ mỗi tháng vì chưa dùng AI đúng cách? Quét miễn phí trong 2 phút, nhận AI Score và lộ trình AI cá nhân hóa.",
     },
     personaHooks: Object.fromEntries(
       Object.values(PERSONAS).map((p) => [p.id, p.hook]),

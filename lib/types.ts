@@ -105,6 +105,8 @@ export interface PublicSettings {
   content: {
     heroTitle: string; // dùng *chữ* để tô màu cam
     heroSubtitle: string;
+    metaTitle: string; // <title> tab trình duyệt + og:title
+    metaDescription: string; // meta description + og:description
   };
   personaHooks: Record<string, string>;
   courseUrls: Record<string, string>;
