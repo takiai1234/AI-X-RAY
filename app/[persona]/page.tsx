@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Funnel from "@/components/Funnel";
 import { PERSONAS } from "@/lib/personas";
 import { getSettings, toPublic } from "@/lib/settings";
+import { ogImageUrl } from "@/lib/ogImage";
 import type { PersonaId } from "@/lib/types";
 
 // Landing riêng theo persona: /ceo, /seller, /office, /affiliate, /marketing, /sales, /hr, /creator
@@ -31,10 +32,15 @@ export async function generateMetadata({
   const hook = settings.personaHooks[persona] || p.hook;
   const title = `${SUB_BRAND_TITLE[persona]} | ${hook}`;
   const description = `Dành riêng cho ${p.label}: quét công việc trong 2 phút, nhận AI Score, số giờ có thể tối ưu và lộ trình AI 30 ngày cá nhân hóa. Miễn phí.`;
+  const ogImg = await ogImageUrl();
   return {
     title,
     description,
-    openGraph: { title, description },
+    openGraph: {
+      title,
+      description,
+      ...(ogImg ? { images: [{ url: ogImg, width: 1200, height: 630 }] } : {}),
+    },
   };
 }
 

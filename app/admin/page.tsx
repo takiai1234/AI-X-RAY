@@ -77,6 +77,31 @@ export default function AdminPage() {
   const [leads, setLeads] = useState<LeadRow[] | null>(null);
   const [leadFilter, setLeadFilter] = useState("");
 
+  // ảnh share (og:image)
+  const [ogVersion, setOgVersion] = useState<number | null>(null);
+  const [ogUploading, setOgUploading] = useState(false);
+
+  const loadOg = async () => {
+    const res = await fetch("/api/admin/ogimage");
+    if (!res.ok) return;
+    const d = await res.json();
+    setOgVersion(d.meta ? new Date(d.meta.updatedAt).getTime() : null);
+  };
+
+  const uploadOg = async (file: File) => {
+    setOgUploading(true);
+    const fd = new FormData();
+    fd.append("file", file);
+    const res = await fetch("/api/admin/ogimage", { method: "POST", body: fd });
+    setOgUploading(false);
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      alert(d.error ?? "Upload thất bại");
+      return;
+    }
+    await loadOg();
+  };
+
   const load = async () => {
     const res = await fetch("/api/admin/settings");
     if (res.status === 401) {
@@ -92,6 +117,7 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
+    if (tab === "noidung" && authed) loadOg();
     if (tab === "leads" && authed) {
       fetch("/api/admin/leads?days=90")
         .then((r) => r.json())
@@ -361,6 +387,65 @@ export default function AdminPage() {
               }
             />
           </Field>
+          <Field
+            label="Ảnh hiển thị khi share link (og:image)"
+            hint="Kích thước chuẩn 1200×630px, PNG/JPG/WebP, tối đa 3MB. Hiện khi share link lên Facebook, Zalo, TikTok, Messenger. Áp dụng cho cả trang chủ lẫn các landing /ceo, /seller..."
+          >
+            <div className="flex flex-col gap-3">
+              {ogVersion ? (
+                <img
+                  src={`/og-image?v=${ogVersion}`}
+                  alt="Ảnh share hiện tại"
+                  className="w-full max-w-md rounded-xl border border-slate-200"
+                />
+              ) : (
+                <div className="flex h-36 w-full max-w-md items-center justify-center rounded-xl border-2 border-dashed border-slate-300 text-sm text-slate-400">
+                  Chưa có ảnh — share link sẽ không có hình
+                </div>
+              )}
+              <div className="flex items-center gap-3">
+                <label className="btn-ghost cursor-pointer !py-2 text-sm">
+                  {ogUploading ? "Đang tải lên..." : ogVersion ? "🔄 Thay ảnh khác" : "⬆️ Tải ảnh lên"}
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    disabled={ogUploading}
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) uploadOg(f);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+                {ogVersion && (
+                  <button
+                    className="text-sm text-red-600 underline"
+                    onClick={async () => {
+                      if (!confirm("Xóa ảnh share?")) return;
+                      await fetch("/api/admin/ogimage", { method: "DELETE" });
+                      await loadOg();
+                    }}
+                  >
+                    Xóa ảnh
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-slate-400">
+                Lưu ý: Facebook/Zalo cache ảnh cũ vài giờ. Sau khi thay ảnh, dán
+                link vào{" "}
+                <a
+                  href="https://developers.facebook.com/tools/debug/"
+                  target="_blank"
+                  className="underline"
+                >
+                  Facebook Sharing Debugger
+                </a>{" "}
+                bấm &quot;Scrape Again&quot; để cập nhật ngay.
+              </p>
+            </div>
+          </Field>
+
           <Field
             label="Tiêu đề trang chủ (hero)"
             hint="Dùng *chữ* để tô màu cam. Ví dụ: Bạn đang bỏ phí *bao nhiêu giờ*..."
