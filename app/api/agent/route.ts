@@ -16,7 +16,11 @@ export const maxDuration = 120;
 // 4. Bản mẫu cá nhân hóa (fallback, không bao giờ vỡ trải nghiệm)
 
 // Gọi Codex CLI headless: prompt qua stdin, lấy message cuối sạch qua -o file.
-function callCodexCli(systemPrompt: string, userMessage: string): Promise<string> {
+function callCodexCli(
+  systemPrompt: string,
+  userMessage: string,
+  home = "/root",
+): Promise<string> {
   const bin = process.env.CODEX_BIN || "/usr/bin/codex";
   const outFile = path.join(os.tmpdir(), `codex-${randomUUID()}.txt`);
   const prompt = `${systemPrompt}\n\n${userMessage}`;
@@ -35,7 +39,7 @@ function callCodexCli(systemPrompt: string, userMessage: string): Promise<string
       ],
       {
         timeout: 110000,
-        env: { ...process.env, HOME: process.env.CODEX_HOME || "/root" },
+        env: { ...process.env, HOME: home },
       },
     );
     let stderr = "";
@@ -270,18 +274,29 @@ export async function POST(req: Request) {
     : userInput;
   const fallbackText = fallbackIntro(context) + persona.agent.fallbackOutput;
 
-  // 1) Codex CLI (ChatGPT Plus). Chờ xong rồi stream lại từng chunk cho client
-  // (client vẫn hiện checklist + đồng hồ trong lúc chờ).
+  // Backend Codex CLI (ChatGPT). Không dùng Claude — theo yêu cầu chỉ dùng ChatGPT.
+  // Thử lần lượt các tài khoản ChatGPT (Plus trước, free sau); hết thì rơi về bản mẫu.
   if (process.env.CODEX_ENABLED === "1") {
-    try {
-      const text = await callCodexCli(persona.agent.systemPrompt, userMessage);
-      return streamText(text);
-    } catch (err) {
-      console.error("[agent] Codex CLI lỗi, thử backend tiếp theo:", err);
+    // Mỗi tài khoản = 1 HOME riêng chứa .codex/auth.json. CODEX_HOMES ngăn cách bằng ";"
+    // ví dụ: CODEX_HOMES="/root;/root/codex-free" (Plus rồi tới free)
+    const homes = (process.env.CODEX_HOMES || process.env.CODEX_HOME || "/root")
+      .split(";")
+      .map((h) => h.trim())
+      .filter(Boolean);
+    for (const home of homes) {
+      try {
+        const text = await callCodexCli(persona.agent.systemPrompt, userMessage, home);
+        return streamText(text);
+      } catch (err) {
+        console.error(`[agent] Codex (${home}) lỗi/hết quota, thử tài khoản tiếp:`, err);
+      }
     }
+    // Hết tài khoản ChatGPT khả dụng → bản mẫu (không dùng Claude)
+    return streamText(fallbackText);
   }
 
-  // 2) 9router
+  // Các backend dưới đây CHỈ chạy khi tắt Codex (CODEX_ENABLED != 1) — dự phòng kỹ thuật.
+  // 9router
   const nineRouterUrl = process.env.LLM_BASE_URL;
   if (nineRouterUrl) {
     const model = process.env.LLM_MODEL || "cc/claude-sonnet-5";
