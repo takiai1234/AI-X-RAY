@@ -1,13 +1,51 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { spawn } from "child_process";
+import { promises as fs } from "fs";
+import os from "os";
+import path from "path";
+import { randomUUID } from "crypto";
 import { PERSONAS } from "@/lib/personas";
 import { AI_LEVELS } from "@/lib/scoring";
 
 export const maxDuration = 120;
 
 // Thứ tự backend cho Agent Demo:
-// 1. 9router (LLM_BASE_URL, OpenAI-compatible, chạy local trên VPS) — ưu tiên
-// 2. Claude API chính thức (ANTHROPIC_API_KEY)
-// 3. Bản mẫu cá nhân hóa (fallback, không bao giờ vỡ trải nghiệm)
+// 1. Codex CLI (CODEX_ENABLED=1, dùng tài khoản ChatGPT Plus qua `codex exec`) — ưu tiên
+// 2. 9router (LLM_BASE_URL, OpenAI-compatible, chạy local trên VPS)
+// 3. Claude API chính thức (ANTHROPIC_API_KEY)
+// 4. Bản mẫu cá nhân hóa (fallback, không bao giờ vỡ trải nghiệm)
+
+// Gọi Codex CLI headless: prompt qua stdin, lấy message cuối sạch qua -o file.
+function callCodexCli(systemPrompt: string, userMessage: string): Promise<string> {
+  const bin = process.env.CODEX_BIN || "/usr/bin/codex";
+  const outFile = path.join(os.tmpdir(), `codex-${randomUUID()}.txt`);
+  const prompt = `${systemPrompt}\n\n${userMessage}`;
+  return new Promise((resolve, reject) => {
+    const proc = spawn(
+      bin,
+      ["exec", "--sandbox", "read-only", "--skip-git-repo-check", "-C", os.tmpdir(), "-o", outFile, "-"],
+      {
+        timeout: 110000,
+        env: { ...process.env, HOME: process.env.CODEX_HOME || "/root" },
+      },
+    );
+    let stderr = "";
+    proc.stderr.on("data", (d) => (stderr += d.toString()));
+    proc.on("error", reject);
+    proc.on("close", async (code) => {
+      try {
+        const out = (await fs.readFile(outFile, "utf8").catch(() => "")).trim();
+        await fs.rm(outFile, { force: true });
+        if (code === 0 && out) resolve(out);
+        else reject(new Error(`codex exit ${code}: ${stderr.slice(0, 200)}`));
+      } catch (e) {
+        reject(e);
+      }
+    });
+    proc.stdin.write(prompt);
+    proc.stdin.end();
+  });
+}
 
 interface AgentContext {
   score?: number;
@@ -223,7 +261,18 @@ export async function POST(req: Request) {
     : userInput;
   const fallbackText = fallbackIntro(context) + persona.agent.fallbackOutput;
 
-  // 1) 9router
+  // 1) Codex CLI (ChatGPT Plus). Chờ xong rồi stream lại từng chunk cho client
+  // (client vẫn hiện checklist + đồng hồ trong lúc chờ).
+  if (process.env.CODEX_ENABLED === "1") {
+    try {
+      const text = await callCodexCli(persona.agent.systemPrompt, userMessage);
+      return streamText(text);
+    } catch (err) {
+      console.error("[agent] Codex CLI lỗi, thử backend tiếp theo:", err);
+    }
+  }
+
+  // 2) 9router
   const nineRouterUrl = process.env.LLM_BASE_URL;
   if (nineRouterUrl) {
     const model = process.env.LLM_MODEL || "cc/claude-sonnet-5";
