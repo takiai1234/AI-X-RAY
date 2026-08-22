@@ -23,7 +23,16 @@ function callCodexCli(systemPrompt: string, userMessage: string): Promise<string
   return new Promise((resolve, reject) => {
     const proc = spawn(
       bin,
-      ["exec", "--sandbox", "read-only", "--skip-git-repo-check", "-C", os.tmpdir(), "-o", outFile, "-"],
+      [
+        "exec",
+        "--sandbox", "read-only",
+        "--skip-git-repo-check",
+        // reasoning thấp: task viết text không cần suy luận sâu, giảm 92s → ~35s
+        "-c", "model_reasoning_effort=low",
+        "-C", os.tmpdir(),
+        "-o", outFile,
+        "-",
+      ],
       {
         timeout: 110000,
         env: { ...process.env, HOME: process.env.CODEX_HOME || "/root" },
